@@ -92,6 +92,12 @@
             50% { transform: scale(1.1); }
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
         .header-stats {
             display: flex;
             gap: 2rem;
@@ -114,11 +120,182 @@
             transform: translateY(-2px);
         }
 
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-button:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-bg);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 200px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            animation: dropdownSlide 0.3s ease;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.5rem 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--danger);
+        }
+
         /* Main Container */
         .container {
             max-width: 1800px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        /* Live Activity Feed */
+        .live-feed {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 300px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .live-feed.collapsed {
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .live-feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .live-feed-toggle {
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .live-feed.collapsed .live-feed-toggle {
+            transform: rotate(180deg);
+        }
+
+        .live-event {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--secondary-bg);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            opacity: 0;
+            animation: slideIn 0.3s ease forwards;
+            border-left: 3px solid var(--accent);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .live-event.danger {
+            border-left-color: var(--danger);
+        }
+
+        .live-event.warning {
+            border-left-color: var(--warning);
+        }
+
+        .event-time {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
         }
 
         /* Global Stats */
@@ -181,6 +358,13 @@
             color: var(--success);
         }
 
+        .stat-mini-chart {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.3;
+        }
+
         /* World Map Section */
         .world-map-section {
             background: var(--card-bg);
@@ -197,6 +381,33 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .map-control-btn {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .map-control-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--accent);
+        }
+
+        .map-control-btn.active {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
         }
 
         .map-container {
@@ -255,6 +466,17 @@
             min-width: 200px;
         }
 
+        .map-stats {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
         /* Agents Table */
         .agents-section {
             background: var(--card-bg);
@@ -269,6 +491,15 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .search-bar {
@@ -287,6 +518,21 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
+        .filter-select {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
         .agents-table {
             width: 100%;
             border-collapse: separate;
@@ -301,6 +547,12 @@
             text-transform: uppercase;
             font-size: 0.875rem;
             letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .agents-table th:hover {
+            color: var(--accent);
         }
 
         .agents-table tr {
@@ -405,6 +657,12 @@
             box-shadow: 0 5px 20px rgba(255, 51, 102, 0.3);
         }
 
+        .btn.primary {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
         /* Command Center */
         .command-center {
             background: var(--card-bg);
@@ -428,6 +686,23 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .command-card:hover::after {
+            left: 100%;
         }
 
         .command-card:hover {
@@ -459,6 +734,13 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 2rem;
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
         .alert-item {
@@ -525,7 +807,73 @@
             box-shadow: 0 10px 40px rgba(0, 255, 136, 0.7);
         }
 
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
         /* Responsive */
+        @media (max-width: 1200px) {
+            .live-feed {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-stats {
                 display: none;
@@ -537,7 +885,6 @@
 
             .search-bar {
                 width: 100%;
-                margin-top: 1rem;
             }
 
             .section-header {
@@ -552,6 +899,10 @@
             .action-buttons {
                 flex-direction: column;
             }
+
+            .user-dropdown {
+                right: -1rem;
+            }
         }
     </style>
 </head>
@@ -565,22 +916,62 @@
                 <span class="logo-icon">🛡️</span>
                 AI SENTINEL-X SUPER ADMIN
             </div>
-            <div class="header-stats">
-                <div class="stat-badge">
-                    <span>🌍</span>
-                    <span id="totalAgents">2,847</span> Global Agents
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <span>🌍</span>
+                        <span id="totalAgents">2,847</span> Global Agents
+                    </div>
+                    <div class="stat-badge">
+                        <span>💰</span>
+                        <span id="mrr">$487,293</span> MRR
+                    </div>
+                    <div class="stat-badge">
+                        <span>⚡</span>
+                        <span id="systemLoad">12.4M</span> Threats/Hour
+                    </div>
                 </div>
-                <div class="stat-badge">
-                    <span>💰</span>
-                    <span id="mrr">$487,293</span> MRR
-                </div>
-                <div class="stat-badge">
-                    <span>⚡</span>
-                    <span id="systemLoad">12.4M</span> Threats/Hour
+                <div class="user-menu">
+                    <div class="user-button" onclick="toggleUserMenu()">
+                        <div class="user-avatar">SA</div>
+                        <span>Super Admin</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" onclick="showProfile()">
+                            <span>👤</span> Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSettings()">
+                            <span>⚙️</span> Settings
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showApiKeys()">
+                            <span>🔑</span> API Keys
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="showActivityLog()">
+                            <span>📋</span> Activity Log
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="downloadReport()">
+                            <span>📊</span> Download Report
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item logout">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Live Activity Feed -->
+    <div class="live-feed" id="liveFeed">
+        <div class="live-feed-header">
+            <span>⚡ Live Activity</span>
+            <span class="live-feed-toggle" onclick="toggleLiveFeed()">◀</span>
+        </div>
+        <div id="liveEventsList"></div>
+    </div>
 
     <!-- Main Container -->
     <div class="container">
@@ -590,31 +981,37 @@
                 <h3>Active Agents</h3>
                 <div class="stat-value" id="activeAgents">2,483</div>
                 <div class="stat-trend">↑ 12% from last month</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
             <div class="stat-card">
                 <h3>Total Customers</h3>
                 <div class="stat-value" id="totalCustomers">847</div>
                 <div class="stat-trend">↑ 23% from last month</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
             <div class="stat-card">
                 <h3>Threats Blocked</h3>
                 <div class="stat-value" id="threatsBlocked">14.2M</div>
                 <div class="stat-trend">Today's total</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
             <div class="stat-card">
                 <h3>Uptime</h3>
                 <div class="stat-value">99.98%</div>
                 <div class="stat-trend">Last 30 days</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
             <div class="stat-card">
                 <h3>Overdue Accounts</h3>
                 <div class="stat-value" style="color: var(--warning);">47</div>
                 <div class="stat-trend" style="color: var(--warning);">Requires attention</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
             <div class="stat-card">
                 <h3>Support Tickets</h3>
                 <div class="stat-value" style="color: var(--info);">23</div>
                 <div class="stat-trend">8 critical</div>
+                <canvas class="stat-mini-chart" width="60" height="30"></canvas>
             </div>
         </div>
 
@@ -622,16 +1019,26 @@
         <div class="world-map-section">
             <div class="map-header">
                 <h2>🌍 Global Agent Distribution</h2>
-                <div class="stat-badge">
-                    <span style="color: var(--success);">●</span> Active
-                    <span style="color: var(--warning);">●</span> Warning
-                    <span style="color: var(--danger);">●</span> Inactive
+                <div class="map-controls">
+                    <button class="map-control-btn active" onclick="filterMap('all')">All</button>
+                    <button class="map-control-btn" onclick="filterMap('active')">Active</button>
+                    <button class="map-control-btn" onclick="filterMap('warning')">Warnings</button>
+                    <button class="map-control-btn" onclick="filterMap('inactive')">Inactive</button>
                 </div>
             </div>
             <div class="map-container" id="worldMap">
                 <!-- Map points will be dynamically generated -->
             </div>
             <div class="map-tooltip" id="mapTooltip"></div>
+            <div class="map-stats">
+                <div style="display: flex; gap: 2rem;">
+                    <div>
+                        <div style="color: var(--success);">● Active: <span id="mapActive">2,483</span></div>
+                        <div style="color: var(--warning);">● Warning: <span id="mapWarning">317</span></div>
+                        <div style="color: var(--danger);">● Inactive: <span id="mapInactive">47</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Command Center -->
@@ -658,6 +1065,16 @@
                     <div class="command-title">Support Dashboard</div>
                     <div class="command-description">View and manage tickets</div>
                 </div>
+                <div class="command-card" onclick="deployNewAgent()">
+                    <span class="command-icon">🚀</span>
+                    <div class="command-title">Deploy New Agent</div>
+                    <div class="command-description">Quick deployment wizard</div>
+                </div>
+                <div class="command-card" onclick="systemHealth()">
+                    <span class="command-icon">💚</span>
+                    <div class="command-title">System Health</div>
+                    <div class="command-description">Infrastructure monitoring</div>
+                </div>
             </div>
         </div>
 
@@ -665,17 +1082,26 @@
         <div class="agents-section">
             <div class="section-header">
                 <h2>🤖 Agent Management</h2>
-                <input type="text" class="search-bar" placeholder="Search by customer, ID, or location..." onkeyup="filterAgents(this.value)">
+                <div class="section-controls">
+                    <input type="text" class="search-bar" placeholder="Search by customer, ID, or location..." onkeyup="filterAgents(this.value)">
+                    <select class="filter-select" onchange="filterByStatus(this.value)">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="warning">Warning</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <button class="btn primary" onclick="exportAgents()">Export CSV</button>
+                </div>
             </div>
             <table class="agents-table">
                 <thead>
                     <tr>
-                        <th>Agent ID</th>
-                        <th>Customer</th>
-                        <th>Location</th>
-                        <th>Status</th>
+                        <th onclick="sortTable('id')">Agent ID ↕</th>
+                        <th onclick="sortTable('customer')">Customer ↕</th>
+                        <th onclick="sortTable('location')">Location ↕</th>
+                        <th onclick="sortTable('status')">Status ↕</th>
                         <th>Sub-Agents</th>
-                        <th>Threats/Hour</th>
+                        <th onclick="sortTable('threats')">Threats/Hour ↕</th>
                         <th>License</th>
                         <th>Actions</th>
                     </tr>
@@ -688,7 +1114,10 @@
 
         <!-- Alerts Section -->
         <div class="alerts-section">
-            <h2>🚨 System Alerts</h2>
+            <div class="alerts-header">
+                <h2>🚨 System Alerts</h2>
+                <button class="btn" onclick="clearAllAlerts()">Clear All</button>
+            </div>
             <div id="alertsList">
                 <!-- Alerts will be dynamically generated -->
             </div>
@@ -698,9 +1127,22 @@
     <!-- Floating Action Button -->
     <div class="fab" onclick="openChat()">💬</div>
 
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Modal Title</h2>
+                <span class="modal-close" onclick="closeModal()">×</span>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Sample data
-        const agents = [
+        let agents = [
             { id: 'SX-001', customer: 'TechCorp Inc', location: 'New York, US', status: 'active', subAgents: 9, threats: '12.4K', license: 'Enterprise', billing: 'current' },
             { id: 'SX-002', customer: 'CyberShield LLC', location: 'London, UK', status: 'active', subAgents: 9, threats: '8.7K', license: 'Enterprise', billing: 'current' },
             { id: 'SX-003', customer: 'DataFort Systems', location: 'Tokyo, JP', status: 'warning', subAgents: 9, threats: '15.2K', license: 'Business', billing: 'overdue' },
@@ -718,12 +1160,99 @@
             { type: 'danger', title: 'Critical: DDoS attack detected on SX-003', time: '3 hours ago' }
         ];
 
+        const liveEvents = [
+            { type: 'success', message: 'Agent SX-001 successfully updated', time: 'Just now' },
+            { type: 'warning', message: 'High CPU usage on SX-003', time: '1 min ago' },
+            { type: 'danger', message: 'Failed login attempt for SX-005', time: '2 min ago' },
+            { type: 'info', message: 'Backup completed for all agents', time: '5 min ago' }
+        ];
+
         // Initialize dashboard
         function initDashboard() {
+            // Check if user is logged in
+            if (!sessionStorage.getItem('loggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Mark as logged in
+            sessionStorage.setItem('loggedIn', 'true');
+            sessionStorage.setItem('lastActivity', new Date().toISOString());
+
             renderAgentsTable();
             renderAlerts();
             renderWorldMap();
+            renderLiveEvents();
             animateNumbers();
+            drawMiniCharts();
+            startLiveUpdates();
+        }
+
+        // User menu toggle
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenu = document.querySelector('.user-menu');
+            if (!userMenu.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+
+        // Live feed toggle
+        function toggleLiveFeed() {
+            const feed = document.getElementById('liveFeed');
+            feed.classList.toggle('collapsed');
+        }
+
+        // Render live events
+        function renderLiveEvents() {
+            const eventsList = document.getElementById('liveEventsList');
+            eventsList.innerHTML = liveEvents.map((event, index) => `
+                <div class="live-event ${event.type}" style="animation-delay: ${index * 0.1}s">
+                    <div>${event.message}</div>
+                    <div class="event-time">${event.time}</div>
+                </div>
+            `).join('');
+        }
+
+        // Add new live event
+        function addLiveEvent(type, message) {
+            liveEvents.unshift({ type, message, time: 'Just now' });
+            if (liveEvents.length > 10) liveEvents.pop();
+            renderLiveEvents();
+        }
+
+        // Start live updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Random live events
+                const eventTypes = ['success', 'warning', 'danger', 'info'];
+                const eventMessages = [
+                    'Agent health check completed',
+                    'Threat detected and blocked',
+                    'Configuration updated',
+                    'Backup process started',
+                    'New deployment initiated'
+                ];
+                
+                if (Math.random() > 0.7) {
+                    const randomType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+                    const randomMessage = eventMessages[Math.floor(Math.random() * eventMessages.length)];
+                    addLiveEvent(randomType, randomMessage);
+                }
+
+                // Update stats
+                document.getElementById('systemLoad').textContent = 
+                    (Math.random() * 5 + 10).toFixed(1) + 'M';
+                
+                const threatCount = document.getElementById('threatsBlocked');
+                const current = parseFloat(threatCount.textContent);
+                threatCount.textContent = (current + Math.random() * 0.1).toFixed(1) + 'M';
+            }, 5000);
         }
 
         // Render agents table
@@ -756,6 +1285,38 @@
             `).join('');
         }
 
+        // Sort table
+        function sortTable(column) {
+            agents.sort((a, b) => {
+                if (a[column] < b[column]) return -1;
+                if (a[column] > b[column]) return 1;
+                return 0;
+            });
+            renderAgentsTable();
+        }
+
+        // Filter agents
+        function filterAgents(searchTerm) {
+            const rows = document.querySelectorAll('.agents-table tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        // Filter by status
+        function filterByStatus(status) {
+            const rows = document.querySelectorAll('.agents-table tbody tr');
+            rows.forEach(row => {
+                if (status === 'all') {
+                    row.style.display = '';
+                } else {
+                    const hasStatus = row.querySelector(`.status-badge.${status}`);
+                    row.style.display = hasStatus ? '' : 'none';
+                }
+            });
+        }
+
         // Render alerts
         function renderAlerts() {
             const alertsList = document.getElementById('alertsList');
@@ -784,15 +1345,53 @@
                 { x: '60%', y: '45%', status: 'warning', info: 'Dubai: 87 agents (2 warnings)' }
             ];
 
+            mapContainer.innerHTML = '';
             locations.forEach(loc => {
                 const point = document.createElement('div');
                 point.className = `map-point ${loc.status}`;
                 point.style.left = loc.x;
                 point.style.top = loc.y;
                 point.setAttribute('data-info', loc.info);
+                point.setAttribute('data-status', loc.status);
                 point.onmouseenter = (e) => showTooltip(e, loc.info);
                 point.onmouseleave = hideTooltip;
                 mapContainer.appendChild(point);
+            });
+        }
+
+        // Filter map
+        function filterMap(status) {
+            const buttons = document.querySelectorAll('.map-control-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const points = document.querySelectorAll('.map-point');
+            points.forEach(point => {
+                if (status === 'all') {
+                    point.style.display = 'block';
+                } else {
+                    point.style.display = point.getAttribute('data-status') === status ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Draw mini charts
+        function drawMiniCharts() {
+            const charts = document.querySelectorAll('.stat-mini-chart');
+            charts.forEach(canvas => {
+                const ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                for (let i = 0; i < 10; i++) {
+                    const x = (canvas.width / 9) * i;
+                    const y = Math.random() * 20 + 5;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                
+                ctx.stroke();
             });
         }
 
@@ -809,18 +1408,34 @@
             document.getElementById('mapTooltip').style.display = 'none';
         }
 
-        // Filter agents
-        function filterAgents(searchTerm) {
-            const rows = document.querySelectorAll('.agents-table tbody tr');
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
-            });
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
         }
 
         // Action functions
         function viewAgent(id) {
-            alert(`Opening detailed view for agent ${id}...`);
+            const agent = agents.find(a => a.id === id);
+            showModal(`Agent Details: ${id}`, `
+                <div style="display: grid; gap: 1rem;">
+                    <div><strong>Customer:</strong> ${agent.customer}</div>
+                    <div><strong>Location:</strong> ${agent.location}</div>
+                    <div><strong>Status:</strong> ${agent.status}</div>
+                    <div><strong>Sub-Agents:</strong> ${agent.subAgents}/9</div>
+                    <div><strong>Threats/Hour:</strong> ${agent.threats}</div>
+                    <div><strong>License:</strong> ${agent.license}</div>
+                    <div><strong>Billing:</strong> ${agent.billing}</div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
         }
 
         function toggleAgent(id) {
@@ -828,7 +1443,7 @@
             if (agent) {
                 agent.status = agent.status === 'active' ? 'inactive' : 'active';
                 renderAgentsTable();
-                alert(`Agent ${id} has been ${agent.status === 'active' ? 'enabled' : 'disabled'}`);
+                addLiveEvent('info', `Agent ${id} has been ${agent.status === 'active' ? 'enabled' : 'disabled'}`);
             }
         }
 
@@ -837,30 +1452,317 @@
             setTimeout(() => btn.parentElement.remove(), 300);
         }
 
-        function massUpdate() {
-            if (confirm('Push update to all 2,847 agents globally?')) {
-                alert('Update initiated. Estimated completion: 15 minutes');
+        function clearAllAlerts() {
+            if (confirm('Clear all alerts?')) {
+                document.getElementById('alertsList').innerHTML = '';
+                addLiveEvent('info', 'All alerts cleared');
             }
+        }
+
+        function massUpdate() {
+            showModal('Mass Update', `
+                <p>Push update to all 2,847 agents globally?</p>
+                <div style="margin-top: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Update Type:</label>
+                    <select class="filter-select" style="width: 100%;">
+                        <option>Security Patch v2.2.1</option>
+                        <option>Feature Update v2.3.0</option>
+                        <option>Critical Hotfix v2.2.0a</option>
+                    </select>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn primary" onclick="deployUpdate()">Deploy Update</button>
+                    <button class="btn" onclick="closeModal()">Cancel</button>
+                </div>
+            `);
+        }
+
+        function deployUpdate() {
+            closeModal();
+            addLiveEvent('success', 'Mass update initiated for 2,847 agents');
+            alert('Update deployment started. Estimated completion: 15 minutes');
         }
 
         function emergencyShutdown() {
             if (confirm('⚠️ EMERGENCY SHUTDOWN ⚠️\n\nThis will disable ALL agents globally. Continue?')) {
                 if (confirm('Are you absolutely sure? This action cannot be undone immediately.')) {
+                    addLiveEvent('danger', 'EMERGENCY SHUTDOWN INITIATED');
                     alert('Emergency shutdown initiated. All agents disabled.');
                 }
             }
         }
 
         function generateReport() {
-            alert('Generating comprehensive report...\n\n• Financial Analytics\n• Threat Statistics\n• Customer Health\n• System Performance');
+            showModal('Generate Report', `
+                <div style="display: grid; gap: 1rem;">
+                    <button class="btn" onclick="generateFinancialReport()">📊 Financial Analytics</button>
+                    <button class="btn" onclick="generateThreatReport()">🛡️ Threat Statistics</button>
+                    <button class="btn" onclick="generateHealthReport()">💚 Customer Health</button>
+                    <button class="btn" onclick="generatePerformanceReport()">⚡ System Performance</button>
+                </div>
+            `);
         }
 
         function supportDashboard() {
-            alert('Opening support dashboard with 23 active tickets...');
+            showModal('Support Dashboard', `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Critical Tickets:</strong> 8
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Open Tickets:</strong> 23
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Average Response Time:</strong> 12 minutes
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function deployNewAgent() {
+            showModal('Deploy New Agent', `
+                <form onsubmit="event.preventDefault(); submitNewAgent();">
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <label>Customer Name:</label>
+                            <input type="text" class="search-bar" style="width: 100%; margin-top: 0.5rem;" required>
+                        </div>
+                        <div>
+                            <label>Location:</label>
+                            <input type="text" class="search-bar" style="width: 100%; margin-top: 0.5rem;" required>
+                        </div>
+                        <div>
+                            <label>License Type:</label>
+                            <select class="filter-select" style="width: 100%; margin-top: 0.5rem;">
+                                <option>Essential ($29/mo)</option>
+                                <option>Business ($149/mo)</option>
+                                <option>Enterprise ($499/mo)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                        <button type="submit" class="btn primary">Deploy</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function submitNewAgent() {
+            closeModal();
+            addLiveEvent('success', 'New agent deployment initiated');
+            alert('Agent deployment started. You will receive credentials via email.');
+        }
+
+        function systemHealth() {
+            showModal('System Health', `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>API Gateway:</strong> <span style="color: var(--success);">Healthy</span>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Database Cluster:</strong> <span style="color: var(--success);">Healthy</span>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>ML Pipeline:</strong> <span style="color: var(--warning);">High Load</span>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Storage:</strong> 42% Used (2.1TB / 5TB)
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function exportAgents() {
+            addLiveEvent('info', 'Exporting agents data to CSV');
+            alert('Export started. Download will begin shortly.');
         }
 
         function openChat() {
-            alert('Opening AI-powered support chat...');
+            showModal('AI Support Assistant', `
+                <div style="height: 300px; background: var(--secondary-bg); border-radius: 8px; padding: 1rem; overflow-y: auto;">
+                    <div style="margin-bottom: 1rem;">
+                        <strong>AI Assistant:</strong> Hello! How can I help you today?
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                    <input type="text" class="search-bar" style="flex: 1;" placeholder="Type your message...">
+                    <button class="btn primary">Send</button>
+                </div>
+            `);
+        }
+
+        // User menu actions
+        function showProfile() {
+            closeModal();
+            showModal('Admin Profile', `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-bg);">SA</div>
+                    <h3>Super Admin</h3>
+                    <p style="color: var(--text-secondary);">admin@aisentinel-x.com</p>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Role:</strong> System Administrator
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Last Login:</strong> Today at 10:23 AM
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Session:</strong> 2 hours 17 minutes
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function showSettings() {
+            closeModal();
+            showModal('Settings', `
+                <div style="display: grid; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" checked> Enable live notifications
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" checked> Auto-refresh dashboard
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" checked> Email alerts for critical events
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox"> Dark mode only (disable light theme)
+                    </label>
+                    <div style="margin-top: 1rem;">
+                        <label>Dashboard refresh interval:</label>
+                        <select class="filter-select" style="width: 100%; margin-top: 0.5rem;">
+                            <option>5 seconds</option>
+                            <option selected>30 seconds</option>
+                            <option>1 minute</option>
+                            <option>5 minutes</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn primary" onclick="saveSettings()">Save Settings</button>
+                    <button class="btn" onclick="closeModal()">Cancel</button>
+                </div>
+            `);
+        }
+
+        function saveSettings() {
+            closeModal();
+            addLiveEvent('success', 'Settings saved successfully');
+        }
+
+        function showApiKeys() {
+            closeModal();
+            showModal('API Keys', `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Production API Key</strong>
+                                <div style="font-family: monospace; color: var(--text-secondary); margin-top: 0.5rem;">
+                                    sk_live_****************************7a8b
+                                </div>
+                            </div>
+                            <button class="btn" onclick="copyApiKey()">Copy</button>
+                        </div>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Test API Key</strong>
+                                <div style="font-family: monospace; color: var(--text-secondary); margin-top: 0.5rem;">
+                                    sk_test_****************************9c2d
+                                </div>
+                            </div>
+                            <button class="btn" onclick="copyApiKey()">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn primary" onclick="generateNewKey()">Generate New Key</button>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function copyApiKey() {
+            addLiveEvent('info', 'API key copied to clipboard');
+        }
+
+        function generateNewKey() {
+            if (confirm('Generate a new API key? The old key will be invalidated.')) {
+                addLiveEvent('warning', 'New API key generated');
+                showApiKeys();
+            }
+        }
+
+        function showActivityLog() {
+            closeModal();
+            showModal('Activity Log', `
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>10:45 AM</strong> - Logged in from 192.168.1.1
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>10:47 AM</strong> - Viewed agent SX-001 details
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>10:52 AM</strong> - Disabled agent SX-005
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>11:15 AM</strong> - Generated financial report
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>11:23 AM</strong> - Cleared system alerts
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function downloadReport() {
+            addLiveEvent('info', 'Generating comprehensive report...');
+            setTimeout(() => {
+                addLiveEvent('success', 'Report ready for download');
+                alert('Report generated successfully. Download starting...');
+            }, 2000);
+        }
+
+        function generateFinancialReport() {
+            closeModal();
+            addLiveEvent('info', 'Generating financial report...');
+            alert('Financial report will be sent to your email');
+        }
+
+        function generateThreatReport() {
+            closeModal();
+            addLiveEvent('info', 'Generating threat report...');
+            alert('Threat analysis report will be sent to your email');
+        }
+
+        function generateHealthReport() {
+            closeModal();
+            addLiveEvent('info', 'Generating customer health report...');
+            alert('Customer health report will be sent to your email');
+        }
+
+        function generatePerformanceReport() {
+            closeModal();
+            addLiveEvent('info', 'Generating performance report...');
+            alert('System performance report will be sent to your email');
         }
 
         // Animate numbers on load
@@ -899,16 +1801,30 @@
         `;
         document.head.appendChild(style);
 
-        // Auto-refresh data every 30 seconds
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Session management
+        window.addEventListener('beforeunload', function() {
+            sessionStorage.setItem('lastActivity', new Date().toISOString());
+        });
+
+        // Check session timeout (30 minutes)
         setInterval(() => {
-            // Update random values to simulate real-time data
-            document.getElementById('systemLoad').textContent = 
-                (Math.random() * 5 + 10).toFixed(1) + 'M';
-            
-            const threatCount = document.getElementById('threatsBlocked');
-            const current = parseFloat(threatCount.textContent);
-            threatCount.textContent = (current + Math.random() * 0.1).toFixed(1) + 'M';
-        }, 30000);
+            const lastActivity = sessionStorage.getItem('lastActivity');
+            if (lastActivity) {
+                const timeDiff = new Date() - new Date(lastActivity);
+                if (timeDiff > 30 * 60 * 1000) { // 30 minutes
+                    alert('Session expired. Please log in again.');
+                    sessionStorage.removeItem('loggedIn');
+                    window.location.href = 'index.html';
+                }
+            }
+        }, 60000); // Check every minute
 
         // Initialize on load
         window.onload = initDashboard;
