@@ -473,6 +473,9 @@
                     buttonText.textContent = 'ACCESS GRANTED';
                     loginButton.style.background = '#00ff88';
                     
+                    // Set session storage
+                    sessionStorage.setItem('loggedIn', 'true');
+                    
                     // Redirect to dashboard
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
