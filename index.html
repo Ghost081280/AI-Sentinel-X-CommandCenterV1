@@ -318,18 +318,6 @@
             75% { transform: translateX(10px); }
         }
 
-        /* Success Message */
-        .success-message {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--accent);
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-            font-size: 0.875rem;
-            display: none;
-        }
-
         /* Loading State */
         .loading {
             display: inline-block;
@@ -347,22 +335,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Demo Credentials Hint */
-        .demo-hint {
-            background: rgba(51, 136, 255, 0.1);
-            border: 1px solid rgba(51, 136, 255, 0.3);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: #3388ff;
-        }
-
-        .demo-hint strong {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
         /* Responsive */
         @media (max-width: 480px) {
             .login-container {
@@ -376,6 +348,11 @@
 
             .logo-text {
                 font-size: 1.5rem;
+            }
+            
+            /* Fix iOS zoom on input focus */
+            .form-input {
+                font-size: 16px;
             }
         }
     </style>
@@ -400,11 +377,6 @@
             Invalid credentials. Please try again.
         </div>
 
-        <!-- Success Message -->
-        <div class="success-message" id="successMessage">
-            Login successful! Redirecting to dashboard...
-        </div>
-
         <!-- Login Form -->
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
@@ -416,6 +388,8 @@
                     placeholder="Enter your username"
                     required
                     autocomplete="username"
+                    autocapitalize="off"
+                    autocorrect="off"
                 >
                 <span class="input-icon">👤</span>
             </div>
@@ -429,6 +403,8 @@
                     placeholder="Enter your password"
                     required
                     autocomplete="current-password"
+                    autocapitalize="off"
+                    autocorrect="off"
                 >
                 <span class="input-icon">🔒</span>
             </div>
@@ -448,13 +424,6 @@
                 <span id="buttonText">ACCESS COMMAND CENTER</span>
             </button>
         </form>
-
-        <!-- Demo Credentials Hint -->
-        <div class="demo-hint">
-            <strong>🔑 Demo Credentials:</strong>
-            Username: <code>admin</code> | Password: <code>sentinel</code><br>
-            Username: <code>demo</code> | Password: <code>demo</code>
-        </div>
 
         <!-- Security Badge -->
         <div class="security-badge">
@@ -490,12 +459,14 @@
 
         // Handle Login
         function handleLogin(event) {
-            event.preventDefault();
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             
-            const username = document.getElementById('username').value.trim();
+            const username = document.getElementById('username').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const buttonText = document.getElementById('buttonText');
             const loginButton = document.getElementById('loginButton');
@@ -505,47 +476,35 @@
             buttonText.textContent = 'AUTHENTICATING...';
             loginButton.disabled = true;
             errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
             
             // Debug log
             console.log('Login attempt:', { username, password });
             
             // Simulate authentication delay
             setTimeout(() => {
-                // Check credentials
+                // Demo credentials (case-insensitive username)
                 if ((username === 'admin' && password === 'sentinel') || 
                     (username === 'demo' && password === 'demo')) {
-                    
-                    // Success
-                    console.log('Login successful!');
                     buttonText.textContent = 'ACCESS GRANTED';
                     loginButton.style.background = '#00ff88';
-                    successMessage.style.display = 'block';
                     
                     // Set session storage
-                    sessionStorage.setItem('loggedIn', 'true');
-                    sessionStorage.setItem('username', username);
+                    try {
+                        sessionStorage.setItem('loggedIn', 'true');
+                    } catch (e) {
+                        console.error('Session storage error:', e);
+                    }
                     
-                    // Try to redirect to dashboard
+                    // Redirect to dashboard
                     setTimeout(() => {
-                        // First try the dashboard.html file
-                        window.location.href = 'dashboard.html';
-                        
-                        // If dashboard.html doesn't exist, show a success message
-                        setTimeout(() => {
-                            // If we're still here after 2 seconds, dashboard.html probably doesn't exist
-                            if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-                                alert('Login successful! Dashboard file not found. Please ensure dashboard.html is in the same directory as index.html');
-                                loadingSpinner.style.display = 'none';
-                                buttonText.textContent = 'LOGIN SUCCESSFUL';
-                                loginButton.style.background = '#00cc70';
-                            }
-                        }, 2000);
+                        try {
+                            window.location.replace('dashboard.html');
+                        } catch (e) {
+                            window.location.href = 'dashboard.html';
+                        }
                     }, 1000);
-                    
                 } else {
-                    // Error
-                    console.log('Login failed!');
+                    // Show error
                     loadingSpinner.style.display = 'none';
                     buttonText.textContent = 'ACCESS COMMAND CENTER';
                     loginButton.disabled = false;
@@ -554,37 +513,46 @@
                     
                     // Clear password field
                     document.getElementById('password').value = '';
-                    
-                    // Focus password field
-                    document.getElementById('password').focus();
                 }
             }, 1500);
+            
+            return false;
         }
 
         // Initialize
         window.onload = function() {
             createMatrixRain();
             
-            // Clear any existing session
-            sessionStorage.removeItem('loggedIn');
-            sessionStorage.removeItem('username');
-            
-            // Focus username field
-            document.getElementById('username').focus();
-            
-            // Check if we're coming back from a failed dashboard load
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('login') === 'success') {
-                const successMessage = document.getElementById('successMessage');
-                successMessage.textContent = 'Login successful! Dashboard not found.';
-                successMessage.style.display = 'block';
+            // Focus username field (desktop only)
+            if (window.innerWidth > 768) {
+                document.getElementById('username').focus();
             }
+            
+            // Handle form submission for mobile
+            const form = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            
+            // Additional event listeners for mobile
+            form.addEventListener('submit', handleLogin, false);
+            
+            // Make button work on mobile
+            loginButton.addEventListener('click', function(e) {
+                if (form.checkValidity()) {
+                    e.preventDefault();
+                    handleLogin(e);
+                }
+            });
+            
+            // Handle Enter key
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (form.checkValidity()) {
+                        handleLogin(e);
+                    }
+                }
+            });
         };
-
-        // Prevent form resubmission on page refresh
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
     </script>
 </body>
 </html>
