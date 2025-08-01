@@ -318,6 +318,18 @@
             75% { transform: translateX(10px); }
         }
 
+        /* Success Message */
+        .success-message {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            font-size: 0.875rem;
+            display: none;
+        }
+
         /* Loading State */
         .loading {
             display: inline-block;
@@ -333,6 +345,22 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Demo Credentials Hint */
+        .demo-hint {
+            background: rgba(51, 136, 255, 0.1);
+            border: 1px solid rgba(51, 136, 255, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #3388ff;
+        }
+
+        .demo-hint strong {
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         /* Responsive */
@@ -372,6 +400,11 @@
             Invalid credentials. Please try again.
         </div>
 
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            Login successful! Redirecting to dashboard...
+        </div>
+
         <!-- Login Form -->
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
@@ -405,7 +438,7 @@
                     <input type="checkbox" id="rememberMe">
                     Remember me
                 </label>
-                <a href="#" class="forgot-link" onclick="alert('Password reset link sent to your email')">
+                <a href="#" class="forgot-link" onclick="alert('Password reset link sent to your email'); return false;">
                     Forgot password?
                 </a>
             </div>
@@ -415,6 +448,13 @@
                 <span id="buttonText">ACCESS COMMAND CENTER</span>
             </button>
         </form>
+
+        <!-- Demo Credentials Hint -->
+        <div class="demo-hint">
+            <strong>🔑 Demo Credentials:</strong>
+            Username: <code>admin</code> | Password: <code>sentinel</code><br>
+            Username: <code>demo</code> | Password: <code>demo</code>
+        </div>
 
         <!-- Security Badge -->
         <div class="security-badge">
@@ -452,9 +492,10 @@
         function handleLogin(event) {
             event.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const buttonText = document.getElementById('buttonText');
             const loginButton = document.getElementById('loginButton');
@@ -464,31 +505,58 @@
             buttonText.textContent = 'AUTHENTICATING...';
             loginButton.disabled = true;
             errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Debug log
+            console.log('Login attempt:', { username, password });
             
             // Simulate authentication delay
             setTimeout(() => {
-                // Demo credentials (in real app, this would be server-side)
+                // Check credentials
                 if ((username === 'admin' && password === 'sentinel') || 
                     (username === 'demo' && password === 'demo')) {
+                    
+                    // Success
+                    console.log('Login successful!');
                     buttonText.textContent = 'ACCESS GRANTED';
                     loginButton.style.background = '#00ff88';
+                    successMessage.style.display = 'block';
                     
                     // Set session storage
                     sessionStorage.setItem('loggedIn', 'true');
+                    sessionStorage.setItem('username', username);
                     
-                    // Redirect to dashboard
+                    // Try to redirect to dashboard
                     setTimeout(() => {
+                        // First try the dashboard.html file
                         window.location.href = 'dashboard.html';
+                        
+                        // If dashboard.html doesn't exist, show a success message
+                        setTimeout(() => {
+                            // If we're still here after 2 seconds, dashboard.html probably doesn't exist
+                            if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+                                alert('Login successful! Dashboard file not found. Please ensure dashboard.html is in the same directory as index.html');
+                                loadingSpinner.style.display = 'none';
+                                buttonText.textContent = 'LOGIN SUCCESSFUL';
+                                loginButton.style.background = '#00cc70';
+                            }
+                        }, 2000);
                     }, 1000);
+                    
                 } else {
-                    // Show error
+                    // Error
+                    console.log('Login failed!');
                     loadingSpinner.style.display = 'none';
                     buttonText.textContent = 'ACCESS COMMAND CENTER';
                     loginButton.disabled = false;
+                    loginButton.style.background = '';
                     errorMessage.style.display = 'block';
                     
                     // Clear password field
                     document.getElementById('password').value = '';
+                    
+                    // Focus password field
+                    document.getElementById('password').focus();
                 }
             }, 1500);
         }
@@ -497,16 +565,26 @@
         window.onload = function() {
             createMatrixRain();
             
+            // Clear any existing session
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('username');
+            
             // Focus username field
             document.getElementById('username').focus();
             
-            // Add enter key support
-            document.getElementById('password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-                }
-            });
+            // Check if we're coming back from a failed dashboard load
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('login') === 'success') {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = 'Login successful! Dashboard not found.';
+                successMessage.style.display = 'block';
+            }
         };
+
+        // Prevent form resubmission on page refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
     </script>
 </body>
 </html>
