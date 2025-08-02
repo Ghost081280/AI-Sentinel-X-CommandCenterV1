@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | AI Sentinel-X</title>
+    <title>AI Sentinel-X | Super Admin Command Center</title>
     <style>
         * {
             margin: 0;
@@ -12,1236 +13,1102 @@
         }
 
         :root {
-            --primary: #00ff88;
-            --secondary: #00ccff;
-            --accent: #7c3aed;
-            --danger: #ff0044;
-            --warning: #ffaa00;
-            --success: #00ff88;
-            --bg-dark: #0a0e1a;
-            --bg-darker: #060912;
-            --bg-card: rgba(10, 20, 40, 0.8);
-            --border: rgba(0, 255, 136, 0.2);
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #0f0f0f;
+            --accent: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffaa33;
             --text-primary: #ffffff;
-            --text-secondary: #8892b0;
-            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
-            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
-            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
-            --gradient-encryption: linear-gradient(135deg, #00ff88 0%, #00aa66 100%);
-            --gradient-quantum: linear-gradient(135deg, #7c3aed 0%, #ff00ff 50%, #00ccff 100%);
-            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
-            --gradient-banner: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(124, 58, 237, 0.1) 50%, rgba(0, 204, 255, 0.15) 100%);
-            --gradient-hq: linear-gradient(135deg, rgba(0, 204, 255, 0.15) 0%, rgba(124, 58, 237, 0.1) 50%, rgba(0, 255, 136, 0.15) 100%);
+            --text-secondary: #888888;
+            --border-color: #2a2a2a;
+            --success: #00ff88;
+            --info: #3388ff;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
-            background: var(--bg-darker);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
             color: var(--text-primary);
+            line-height: 1.6;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* Neural Network Background Canvas */
-        #neuralCanvas {
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animated Background */
+        .bg-animation {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(51, 136, 255, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(255, 51, 102, 0.02) 0%, transparent 40%);
+            animation: bgShift 30s ease-in-out infinite;
         }
 
-        /* Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 20px;
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
         }
 
-        /* Header with rounded bottom corners */
+        /* Grid Background Pattern */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Header - Improved */
         .header {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px 15px 20px 20px;
-            padding: 25px 35px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
         }
 
         .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
         }
 
-        .header-left {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         }
 
-        /* Logo */
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            position: relative;
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        .header-center {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 3rem;
         }
 
-        .logo-shield {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-shield);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            position: relative;
-            animation: shieldPulse 3s ease-in-out infinite;
+        .nav-links {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 2rem;
         }
 
-        @keyframes shieldPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .logo-eye {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: var(--bg-darker);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-iris {
-            width: 20px;
-            height: 20px;
-            background: var(--gradient-1);
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
-        }
-
-        .rotating-dots {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .dot {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--primary);
-        }
-
-        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
-        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
-        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
-
-        .brand-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand-name {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .brand-tagline {
-            font-size: 14px;
+        .nav-link {
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
         }
 
         .header-right {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
             align-items: center;
         }
 
-        /* Encryption Status Badges */
-        .encryption-badges {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .encryption-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .encryption-badge.classical {
-            background: rgba(0, 255, 136, 0.1);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .encryption-badge.quantum {
-            background: rgba(124, 58, 237, 0.1);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .status-light {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: statusPulse 2s ease-in-out infinite;
-        }
-
-        .status-light.active {
-            background: var(--success);
-            box-shadow: 0 0 10px var(--success);
-        }
-
-        .status-light.inactive {
-            background: var(--danger);
-            box-shadow: 0 0 10px var(--danger);
-        }
-
-        @keyframes statusPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.2); }
-        }
-
-        .agent-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 20px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .agent-status:hover {
-            background: rgba(0, 255, 136, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
-        }
-
-        .agent-icon {
-            font-size: 20px;
-        }
-
-        .agent-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .agent-title {
-            font-weight: bold;
-            font-size: 14px;
-            color: var(--primary);
-        }
-
-        .agent-status-text {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .logout-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 0, 68, 0.3);
-            border-radius: 8px;
-            padding: 10px 20px;
-            color: var(--danger);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 0, 68, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            background: var(--bg-card);
-            padding: 12px;
-            border-radius: 15px;
-            border: 1px solid var(--border);
-            overflow-x: auto;
-            backdrop-filter: blur(15px);
-        }
-
-        .nav-tab {
-            padding: 12px 24px;
-            background: transparent;
-            border: 1px solid transparent;
+        .stat-badge {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 0.6rem 1.2rem;
             border-radius: 10px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            text-decoration: none;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .nav-tab:hover {
+        .stat-badge:hover {
             background: rgba(0, 255, 136, 0.1);
-            border-color: var(--border);
-            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
         }
 
-        .nav-tab.active {
-            background: var(--gradient-1);
-            color: var(--bg-darker);
-            font-weight: bold;
+        .stat-badge-value {
+            font-weight: 600;
+            font-size: 1rem;
         }
 
-        /* Enhanced V3-Style System Status Banner */
-        .system-status-banner {
-            background: var(--gradient-banner);
-            border: 2px solid;
-            border-image: var(--gradient-hybrid) 1;
-            border-radius: 15px;
-            padding: 25px 35px;
-            text-align: center;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 16px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.4),
-                inset 0 0 60px rgba(0, 255, 136, 0.1);
+        .stat-badge-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* User Menu - Improved */
+        .user-menu {
             position: relative;
-            overflow: hidden;
-            animation: bannerPulse 4s ease-in-out infinite;
         }
 
-        @keyframes bannerPulse {
-            0%, 100% { 
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 60px rgba(0, 255, 136, 0.1);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 12px 48px rgba(0, 255, 136, 0.3), inset 0 0 80px rgba(124, 58, 237, 0.15);
-                transform: scale(1.01);
-            }
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .system-status-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: bannerScan 3s linear infinite;
+        .user-button:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-2px);
         }
 
-        @keyframes bannerScan {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .banner-content {
-            position: relative;
-            z-index: 1;
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #00cc70);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            font-weight: bold;
+            color: var(--primary-bg);
+            font-size: 0.9rem;
         }
 
-        .banner-section {
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-width: 220px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            animation: dropdownSlide 0.3s ease;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .dropdown-email {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 14px;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
         }
 
-        .banner-icon {
-            font-size: 18px;
-            filter: drop-shadow(0 0 10px currentColor);
-            animation: iconGlow 2s ease-in-out infinite alternate;
+        .dropdown-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            padding-left: 1.5rem;
         }
 
-        @keyframes iconGlow {
-            0% { filter: drop-shadow(0 0 10px currentColor); }
-            100% { filter: drop-shadow(0 0 20px currentColor); }
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0;
         }
 
-        .banner-text {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: bold;
+        .dropdown-item.logout {
+            color: var(--danger);
         }
 
-        .banner-separator {
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.5);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 255, 136, 0.05);
             color: var(--accent);
-            font-size: 18px;
-            animation: separatorPulse 2s ease-in-out infinite;
         }
 
-        @keyframes separatorPulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        .sidebar-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+        }
+
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--primary-bg);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-badge.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .sidebar-badge.warning {
+            background: var(--warning);
+            color: var(--primary-bg);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
         }
 
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+        /* Quick Stats Cards */
+        .quick-stats {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* AI Agent Command Center */
-        .agent-command-center {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(15px);
-        }
-
-        .command-center-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .command-center-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Main Agent Card */
-        .main-agent-card {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 255, 0.05) 100%);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
         }
 
-        .main-agent-card::before {
+        .stat-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
-            animation: agentPulse 8s linear infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scan 3s linear infinite;
         }
 
-        @keyframes agentPulse {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
-        .main-agent-content {
-            position: relative;
-            z-index: 1;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            justify-content: center;
+            font-size: 1.5rem;
         }
 
-        .main-agent-icon {
-            font-size: 48px;
-            filter: drop-shadow(0 0 20px var(--primary));
-        }
-
-        .main-agent-info {
-            flex: 1;
-        }
-
-        .main-agent-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .main-agent-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
-
-        .main-agent-stats {
+        .stat-card-change {
+            font-size: 0.85rem;
             display: flex;
-            gap: 25px;
+            align-items: center;
+            gap: 0.25rem;
         }
 
-        .agent-stat {
-            text-align: center;
+        .stat-card-change.positive {
+            color: var(--success);
+        }
+
+        .stat-card-change.negative {
+            color: var(--danger);
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1;
         }
 
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
+        .stat-value.accent {
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         }
 
-        /* Sub-Agents Section Header */
-        .sub-agents-header {
-            margin: 25px 0 15px 0;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sub-agents-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sub-agents-subtitle {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        /* Sub-Agents Grid */
-        .sub-agents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-        }
-
-        .sub-agent-card {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 255, 136, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .sub-agent-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
-            border-color: var(--primary);
-        }
-
-        .sub-agent-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 0 10px currentColor);
-            min-width: 40px;
-        }
-
-        .sub-agent-info {
-            flex: 1;
-        }
-
-        .sub-agent-name {
-            font-weight: bold;
-            font-size: 16px;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .sub-agent-description {
-            font-size: 12px;
+        .stat-subtitle {
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
-        .sub-agent-activity {
-            font-size: 11px;
-            color: var(--success);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .activity-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
-        }
-
-        .sub-agent-manage-btn {
+        .stat-chart {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 6px;
-            padding: 4px 8px;
-            font-size: 10px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
+            bottom: 0;
+            right: 0;
+            width: 120px;
+            height: 60px;
+            opacity: 0.1;
+        }
+
+        /* Full Width Cards */
+        .card-full {
+            grid-column: span 12;
+        }
+
+        .card-half {
+            grid-column: span 6;
+        }
+
+        .card-third {
+            grid-column: span 4;
+        }
+
+        .card-two-thirds {
+            grid-column: span 8;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
         }
 
-        .sub-agent-manage-btn:hover {
-            background: var(--primary);
-            color: var(--bg-darker);
+        .card:hover {
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0, 255, 136, 0.2);
         }
 
-        /* New Agent Badge */
-        .new-agent-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--gradient-hybrid);
-            color: var(--bg-darker);
-            font-size: 9px;
-            padding: 3px 6px;
-            border-radius: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            animation: newAgentPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes newAgentPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Security Feed */
-        .security-feed {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(15px);
-        }
-
-        .feed-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .feed-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .live-indicator {
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--danger);
-            font-weight: bold;
+            gap: 0.75rem;
         }
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--danger);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
-        .feed-content {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
+        /* World Map */
+        .world-map-container {
+            position: relative;
+            height: 500px;
+            background: 
+                radial-gradient(ellipse at center, rgba(0, 255, 136, 0.05) 0%, transparent 70%),
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwMCA1MDBMNDAwIDIwMEw3MDAgMzAwTDEwMDAgMTAwIiBzdHJva2U9IiMyYTJhMmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8Y2lyY2xlIGN4PSI0MDAiIGN5PSIyMDAiIHI9IjEwIiBmaWxsPSIjMmEyYTJhIi8+CjxjaXJjbGUgY3g9IjcwMCIgY3k9IjMwMCIgcj0iMTAiIGZpbGw9IiMyYTJhMmEiLz4KPGNpcmNsZSBjeD0iMTAwMCIgY3k9IjEwMCIgcj0iMTAiIGZpbGw9IiMyYTJhMmEiLz4KPC9zdmc+') center/cover no-repeat;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        .feed-item {
-            background: rgba(0, 255, 136, 0.05);
-            border-left: 3px solid var(--primary);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 0 8px 8px 0;
-            animation: slideIn 0.5s ease;
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 10, 10, 0.4) 100%);
+            pointer-events: none;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        .map-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(15, 15, 15, 0.9);
+            padding: 0.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
 
-        .feed-item.warning {
-            background: rgba(255, 170, 0, 0.05);
-            border-left-color: var(--warning);
+        .map-control-btn {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
-        .feed-item.danger {
-            background: rgba(255, 0, 68, 0.05);
-            border-left-color: var(--danger);
-        }
-
-        .feed-item.encryption {
-            background: rgba(124, 58, 237, 0.05);
-            border-left-color: var(--accent);
-        }
-
-        .feed-time {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-        }
-
-        .feed-message {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .feed-agent {
-            font-size: 11px;
+        .map-control-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--accent);
             color: var(--accent);
-            margin-top: 5px;
-            font-style: italic;
         }
 
-        /* NEW: Command Center HQ Module */
-        .command-hq-module {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        .map-control-btn.active {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .map-stats-overlay {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 2rem;
+        }
+
+        .map-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .map-stat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .map-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .map-stat-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: 0.25rem;
+        }
+
+        /* Agent Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .agent-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
-        .command-hq-module::before {
+        .agent-card::after {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: var(--gradient-hq);
-            opacity: 0.03;
-            animation: hqScan 8s linear infinite;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.6s ease;
         }
 
-        @keyframes hqScan {
-            0% { left: -100%; }
-            100% { left: 100%; }
+        .agent-card:hover::after {
+            left: 100%;
         }
 
-        .hq-header {
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-            z-index: 1;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
 
-        .hq-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .agent-id {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .agent-status {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
 
-        .hq-version {
-            font-size: 11px;
-            color: var(--text-secondary);
-            background: rgba(0, 204, 255, 0.1);
-            padding: 4px 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 204, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .agent-status.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
         }
 
-        .hq-status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            position: relative;
-            z-index: 1;
+        .agent-status.warning {
+            background: rgba(255, 170, 51, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 51, 0.3);
         }
 
-        .hq-status-item {
-            background: rgba(0, 204, 255, 0.05);
-            border: 1px solid rgba(0, 204, 255, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
+        .agent-status.inactive {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
         }
 
-        .hq-status-item:hover {
-            background: rgba(0, 204, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 204, 255, 0.2);
-        }
-
-        .hq-status-icon {
-            font-size: 20px;
-            min-width: 24px;
-            filter: drop-shadow(0 0 8px currentColor);
-        }
-
-        .hq-status-content {
-            flex: 1;
-        }
-
-        .hq-status-label {
-            font-weight: bold;
-            color: var(--secondary);
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-
-        .hq-status-value {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .hq-status-indicator {
-            width: 8px;
-            height: 8px;
+        .status-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            margin-left: auto;
-            animation: pulse 2s ease-in-out infinite;
+            background: currentColor;
+            animation: blink 2s ease-in-out infinite;
         }
 
-        .hq-status-indicator.active {
-            background: var(--success);
-            box-shadow: 0 0 10px var(--success);
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        .hq-status-indicator.warning {
-            background: var(--warning);
-            box-shadow: 0 0 10px var(--warning);
+        .agent-info {
+            margin-bottom: 1rem;
         }
 
-        /* Enhanced System Metrics */
-        .system-metrics {
+        .agent-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-location {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .agent-metrics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
         }
 
-        .metric-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
+        .agent-metric {
             text-align: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.02) 0%, rgba(0, 204, 255, 0.02) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .metric-card:hover::before {
-            opacity: 1;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
-        }
-
-        .metric-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 10px currentColor);
-            position: relative;
-            z-index: 1;
         }
 
         .metric-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 8px;
-            text-shadow: 0 0 20px currentColor;
-            position: relative;
-            z-index: 1;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent);
         }
 
         .metric-label {
-            font-size: 13px;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
         }
 
-        .metric-detail {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            line-height: 1.3;
-            position: relative;
-            z-index: 1;
+        /* Live Activity Feed */
+        .activity-feed {
+            height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
         }
 
-        .metric-trend {
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-item:hover {
+            transform: translateX(4px);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .activity-item.success {
+            border-left-color: var(--success);
+        }
+
+        .activity-item.warning {
+            border-left-color: var(--warning);
+        }
+
+        .activity-item.danger {
+            border-left-color: var(--danger);
+        }
+
+        .activity-item.info {
+            border-left-color: var(--info);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            margin-top: 5px;
-            font-size: 10px;
-            position: relative;
-            z-index: 1;
+            flex-shrink: 0;
+            font-size: 1rem;
         }
 
-        .trend-up {
+        .activity-icon.success {
+            background: rgba(0, 255, 136, 0.1);
             color: var(--success);
         }
 
-        .trend-down {
+        .activity-icon.warning {
+            background: rgba(255, 170, 51, 0.1);
+            color: var(--warning);
+        }
+
+        .activity-icon.danger {
+            background: rgba(255, 51, 102, 0.1);
             color: var(--danger);
         }
 
-        .trend-stable {
+        .activity-icon.info {
+            background: rgba(51, 136, 255, 0.1);
+            color: var(--info);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-message {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
             color: var(--text-secondary);
         }
 
-        /* AI Chat Widget */
-        .ai-chat-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
+        /* Performance Chart */
+        .performance-chart {
+            height: 300px;
+            position: relative;
+            padding: 1rem;
         }
 
-        .ai-chat-toggle {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-1);
-            border-radius: 50%;
+        .chart-grid {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chart-line {
+            height: 1px;
+            background: var(--border-color);
+            position: relative;
+        }
+
+        .chart-label {
+            position: absolute;
+            left: -40px;
+            top: -8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #00cc70;
+            border-color: #00cc70;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
-            transition: all 0.3s ease;
-            font-size: 28px;
-            border: none;
-            color: var(--bg-darker);
-        }
-
-        .ai-chat-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .ai-chat-window {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            width: 400px;
-            height: 600px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-        }
-
-        .ai-chat-window.active {
-            display: flex;
-            animation: chatSlideIn 0.3s ease;
-        }
-
-        @keyframes chatSlideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .ai-chat-header {
-            background: var(--gradient-1);
-            color: var(--bg-darker);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-        }
-
-        .ai-chat-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .chat-status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--bg-darker);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .ai-chat-close {
-            cursor: pointer;
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: var(--bg-darker);
-        }
-
-        .ai-chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .ai-message {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ai-message-bubble {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 15px 20px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-
-        .ai-message-bubble.user {
-            background: rgba(0, 204, 255, 0.1);
-            border-color: var(--secondary);
-            align-self: flex-end;
-        }
-
-        .ai-message-bubble.system {
-            background: rgba(124, 58, 237, 0.1);
-            border-color: var(--accent);
-            font-size: 13px;
-            font-style: italic;
-        }
-
-        .ai-message-time {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-
-        .ai-chat-input-container {
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .ai-chat-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 15px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .ai-chat-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .ai-chat-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .ai-chat-send {
-            background: var(--gradient-1);
-            border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
-            color: var(--bg-darker);
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        /* CLI Mode Indicator */
-        .cli-mode-indicator {
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid var(--warning);
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--warning);
-            display: none;
         }
 
-        .cli-mode-indicator.active {
-            display: block;
-        }
-
-        /* Agent Shutdown Modal */
-        .modal-overlay {
+        /* Modal */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(5px);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
         }
 
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
             width: 90%;
-            backdrop-filter: blur(20px);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: modalSlideIn 0.3s ease;
         }
 
-        @keyframes modalSlideIn {
+        @keyframes modalSlide {
             from {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.95);
+                transform: translateY(-50px) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -1250,798 +1117,1243 @@
         }
 
         .modal-header {
-            text-align: center;
-            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--warning);
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
 
-        .modal-content {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .modal-btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
+        .modal-close {
             cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
         }
 
-        .modal-btn-primary {
-            background: var(--gradient-1);
-            color: var(--bg-darker);
+        .modal-close:hover {
+            color: var(--danger);
+            background: rgba(255, 51, 102, 0.1);
         }
 
-        .modal-btn-secondary {
-            background: transparent;
-            border: 2px solid var(--border);
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
-        .modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(0, 255, 136, 0.6);
+        }
+
+        /* Animations */
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .card-half {
+                grid-column: span 12;
             }
             
-            .sub-agents-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            .card-third {
+                grid-column: span 6;
             }
+            
+            .card-two-thirds {
+                grid-column: span 12;
+            }
+        }
 
-            .hq-status-grid {
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1rem 0;
+            }
+            
+            .card-third {
+                grid-column: span 12;
+            }
+            
+            .agent-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
+            .header-stats {
+                display: none;
             }
             
-            .encryption-badges {
-                order: -1;
-                justify-content: center;
-            }
-            
-            .nav-tabs {
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .system-metrics {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .ai-chat-window {
-                width: calc(100vw - 40px);
-                height: calc(100vh - 120px);
-                right: -20px;
-                bottom: 80px;
-            }
-
-            .sub-agents-grid {
+            .quick-stats {
                 grid-template-columns: 1fr;
             }
-
-            .banner-content {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .banner-section {
-                font-size: 12px;
-            }
-
-            .hq-status-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
         }
     </style>
 </head>
 <body>
-    <script>
-        // Check authentication
-        const auth = localStorage.getItem('sentinel_auth');
-        if (!auth) {
-            window.location.href = 'index.html';
-        } else {
-            const authData = JSON.parse(auth);
-            if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
-                localStorage.removeItem('sentinel_auth');
-                window.location.href = 'index.html';
-            }
-        }
-    </script>
+    <div class="bg-animation"></div>
+    <div class="grid-bg"></div>
 
-    <!-- Neural Network Background -->
-    <canvas id="neuralCanvas"></canvas>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                AI SENTINEL-X
+            </div>
+            
+            <nav class="nav-links">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Agents</a>
+                <a href="#" class="nav-link">Analytics</a>
+                <a href="#" class="nav-link">Threats</a>
+                <a href="#" class="nav-link">Reports</a>
+            </nav>
 
-    <!-- Container -->
-    <div class="container">
-        <!-- Header with rounded bottom corners -->
-        <header class="header">
-            <div class="header-content">
-                <div class="header-left">
-                    <div class="logo-container">
-                        <div class="rotating-dots">
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">2,847</div>
+                            <div class="stat-badge-label">Global Agents</div>
                         </div>
-                        <div class="logo-shield">
-                            <div class="logo-eye">
-                                <div class="logo-iris"></div>
+                    </div>
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">$487K</div>
+                            <div class="stat-badge-label">MRR</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-button" onclick="toggleUserMenu()">
+                        <div class="user-avatar">SA</div>
+                        <div class="user-info">
+                            <div class="user-name">Super Admin</div>
+                            <div class="user-role">System Administrator</div>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">▼</span>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <div>
+                                <div class="user-name">Super Admin</div>
+                                <div class="dropdown-email">admin@aisentinel-x.com</div>
+                            </div>
+                        </div>
+                        <a href="#" class="dropdown-item" onclick="showProfile()">
+                            <span>👤</span> Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSettings()">
+                            <span>⚙️</span> Settings
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showApiKeys()">
+                            <span>🔑</span> API Keys
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="showActivityLog()">
+                            <span>📋</span> Activity Log
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="downloadReport()">
+                            <span>📊</span> Download Report
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item logout" onclick="logout()">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <a href="#" class="sidebar-item active" onclick="showDashboard()">
+                    <span>📊</span> Dashboard
+                    <span class="sidebar-badge">Live</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showAgents()">
+                    <span>🤖</span> Agents
+                    <span class="sidebar-badge">2,847</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showThreats()">
+                    <span>🛡️</span> Threats
+                    <span class="sidebar-badge danger">47</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Operations</div>
+                <a href="#" class="sidebar-item" onclick="showDeployments()">
+                    <span>🚀</span> Deployments
+                </a>
+                <a href="#" class="sidebar-item" onclick="showMaintenance()">
+                    <span>🔧</span> Maintenance
+                    <span class="sidebar-badge warning">3</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showBackups()">
+                    <span>💾</span> Backups
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Analytics</div>
+                <a href="#" class="sidebar-item" onclick="showPerformance()">
+                    <span>⚡</span> Performance
+                </a>
+                <a href="#" class="sidebar-item" onclick="showFinancials()">
+                    <span>💰</span> Financials
+                </a>
+                <a href="#" class="sidebar-item" onclick="showReports()">
+                    <span>📈</span> Reports
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Support</div>
+                <a href="#" class="sidebar-item" onclick="showTickets()">
+                    <span>🎫</span> Tickets
+                    <span class="sidebar-badge">23</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showDocumentation()">
+                    <span>📚</span> Documentation
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">🤖</div>
+                        <div class="stat-card-change positive">
+                            <span>↑</span> 12%
+                        </div>
+                    </div>
+                    <h3>Active Agents</h3>
+                    <div class="stat-value accent">2,483</div>
+                    <div class="stat-subtitle">87.3% of total fleet</div>
+                    <canvas class="stat-chart" id="activeChart"></canvas>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">🛡️</div>
+                        <div class="stat-card-change positive">
+                            <span>↑</span> 23%
+                        </div>
+                    </div>
+                    <h3>Threats Blocked</h3>
+                    <div class="stat-value">14.2M</div>
+                    <div class="stat-subtitle">Today's total</div>
+                    <canvas class="stat-chart" id="threatsChart"></canvas>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">💚</div>
+                        <div class="stat-card-change positive">
+                            <span>→</span> 0%
+                        </div>
+                    </div>
+                    <h3>System Health</h3>
+                    <div class="stat-value">99.98%</div>
+                    <div class="stat-subtitle">All systems operational</div>
+                    <canvas class="stat-chart" id="healthChart"></canvas>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">💰</div>
+                        <div class="stat-card-change positive">
+                            <span>↑</span> 18%
+                        </div>
+                    </div>
+                    <h3>Monthly Revenue</h3>
+                    <div class="stat-value">$487K</div>
+                    <div class="stat-subtitle">847 active customers</div>
+                    <canvas class="stat-chart" id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- World Map -->
+                <div class="card card-two-thirds">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🌍</span> Global Agent Distribution
+                        </h2>
+                        <div class="card-actions">
+                            <div class="map-controls" style="position: static; background: none; padding: 0;">
+                                <button class="map-control-btn active" onclick="filterMap('all')">All</button>
+                                <button class="map-control-btn" onclick="filterMap('active')">Active</button>
+                                <button class="map-control-btn" onclick="filterMap('warning')">Warnings</button>
+                                <button class="map-control-btn" onclick="filterMap('inactive')">Inactive</button>
                             </div>
                         </div>
                     </div>
-                    <div class="brand-info">
-                        <h1 class="brand-name">AI SENTINEL-X</h1>
-                        <p class="brand-tagline">Autonomous Cyber Defense</p>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="encryption-badges">
-                        <div class="encryption-badge classical">
-                            <div class="status-light active" id="classicalStatus"></div>
-                            <span>CLASSICAL</span>
-                        </div>
-                        <div class="encryption-badge quantum">
-                            <div class="status-light active" id="quantumStatus"></div>
-                            <span>HYBRID</span>
-                        </div>
-                    </div>
-                    <div class="agent-status" onclick="showAgentShutdownModal()">
-                        <span class="agent-icon">🤖</span>
-                        <div class="agent-info">
-                            <span class="agent-title">AI Agent Active</span>
-                            <span class="agent-status-text" id="agentModeText">Autonomous with Manual Override</span>
-                        </div>
-                    </div>
-                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Navigation -->
-        <nav class="nav-tabs">
-            <a href="#" class="nav-tab active">
-                <span>🏠</span>
-                <span>Dashboard</span>
-            </a>
-            <a href="threats.html" class="nav-tab">
-                <span>🛡️</span>
-                <span>Threats</span>
-            </a>
-            <a href="network.html" class="nav-tab">
-                <span>🌐</span>
-                <span>Network</span>
-            </a>
-            <a href="defense.html" class="nav-tab">
-                <span>⚔️</span>
-                <span>Defense</span>
-            </a>
-            <a href="ai-engine.html" class="nav-tab">
-                <span>🧠</span>
-                <span>AI Engine</span>
-            </a>
-            <a href="encryption.html" class="nav-tab">
-                <span>🔐</span>
-                <span>Encryption</span>
-            </a>
-            <a href="analytics.html" class="nav-tab">
-                <span>📊</span>
-                <span>Analytics</span>
-            </a>
-            <a href="vpn.html" class="nav-tab">
-                <span>🔒</span>
-                <span>VPNMonitor</span>
-            </a>
-            <a href="settings.html" class="nav-tab">
-                <span>⚙️</span>
-                <span>Settings</span>
-            </a>
-        </nav>
-
-        <!-- Enhanced V3-Style System Status Banner -->
-        <div class="system-status-banner">
-            <div class="banner-content">
-                <div class="banner-section">
-                    <span class="banner-icon">🤖</span>
-                    <span class="banner-text">AI SENTINEL-X HYBRID</span>
-                </div>
-                <div class="banner-separator">•</div>
-                <div class="banner-section">
-                    <span class="banner-icon">🔗</span>
-                    <span class="banner-text">10 SUB-AGENTS ONLINE</span>
-                </div>
-                <div class="banner-separator">•</div>
-                <div class="banner-section">
-                    <span class="banner-icon">🛡️</span>
-                    <span class="banner-text">247 DEVICES PROTECTED</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- AI Agent Command Center -->
-                <div class="agent-command-center">
-                    <div class="command-center-header">
-                        <h2 class="command-center-title">AI Agent Command Center</h2>
-                        <span style="color: var(--text-secondary); font-size: 14px;">Orchestrating all operations</span>
-                    </div>
-                    
-                    <!-- Main Agent -->
-                    <div class="main-agent-card" onclick="showMainAgentDetails()">
-                        <div class="main-agent-content">
-                            <div class="main-agent-icon">🤖</div>
-                            <div class="main-agent-info">
-                                <div class="main-agent-name">Main Agent</div>
-                                <div class="main-agent-description">Central AI orchestrating all sub-agents and security operations with hybrid-resistant encryption</div>
-                                <div class="main-agent-stats">
-                                    <div class="agent-stat">
-                                        <div class="stat-value" id="subAgentCount">10</div>
-                                        <div class="stat-label">Sub-Agents</div>
-                                    </div>
-                                    <div class="agent-stat">
-                                        <div class="stat-value" id="decisionsPerMin">2.4K</div>
-                                        <div class="stat-label">Decisions/Min</div>
-                                    </div>
-                                    <div class="agent-stat">
-                                        <div class="stat-value">99.8%</div>
-                                        <div class="stat-label">Accuracy</div>
-                                    </div>
-                                    <div class="agent-stat">
-                                        <div class="stat-value" id="systemUptime">99.98%</div>
-                                        <div class="stat-label">Uptime</div>
-                                    </div>
-                                </div>
+                    <div class="world-map-container" id="worldMap">
+                        <div class="map-overlay"></div>
+                        <div class="map-stats-overlay">
+                            <div class="map-stat">
+                                <div class="map-stat-dot" style="background: var(--success);"></div>
+                                <span class="map-stat-label">Active:</span>
+                                <span class="map-stat-value">2,483</span>
+                            </div>
+                            <div class="map-stat">
+                                <div class="map-stat-dot" style="background: var(--warning);"></div>
+                                <span class="map-stat-label">Warning:</span>
+                                <span class="map-stat-value">317</span>
+                            </div>
+                            <div class="map-stat">
+                                <div class="map-stat-dot" style="background: var(--danger);"></div>
+                                <span class="map-stat-label">Inactive:</span>
+                                <span class="map-stat-value">47</span>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Sub-Agents Section Header -->
-                    <div class="sub-agents-header">
-                        <div class="sub--agents-title">
-                            <span>🔗</span>
-                            <span>Sub-Agent Network</span>
+                </div>
+
+                <!-- Live Activity -->
+                <div class="card card-third">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>⚡</span> Live Activity
+                        </h2>
+                        <button class="btn btn-sm">View All</button>
+                    </div>
+                    <div class="activity-feed" id="activityFeed">
+                        <!-- Activity items will be dynamically generated -->
+                    </div>
+                </div>
+
+                <!-- Top Agents -->
+                <div class="card card-half">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🏆</span> Top Performing Agents
+                        </h2>
+                        <button class="btn btn-sm" onclick="showAllAgents()">View All</button>
+                    </div>
+                    <div class="agent-grid">
+                        <!-- Agent cards will be dynamically generated -->
+                    </div>
+                </div>
+
+                <!-- System Performance -->
+                <div class="card card-half">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📈</span> System Performance
+                        </h2>
+                        <select class="form-select" style="width: auto;">
+                            <option>Last 24 Hours</option>
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                        </select>
+                    </div>
+                    <div class="performance-chart">
+                        <div class="chart-grid">
+                            <div class="chart-line"><span class="chart-label">100%</span></div>
+                            <div class="chart-line"><span class="chart-label">75%</span></div>
+                            <div class="chart-line"><span class="chart-label">50%</span></div>
+                            <div class="chart-line"><span class="chart-label">25%</span></div>
+                            <div class="chart-line"><span class="chart-label">0%</span></div>
                         </div>
-                        <div class="sub-agents-subtitle">Specialized AI modules coordinated by Main Agent • VPNMonitor now active</div>
-                    </div>
-                    
-                    <!-- Sub-Agents -->
-                    <div class="sub-agents-grid" id="subAgentsGrid">
-                        <!-- Sub-agents will be populated by JavaScript from shared.js -->
                     </div>
                 </div>
-            </div>
 
-            <!-- Right Column -->
-            <div class="right-column">
-                <!-- Security Feed -->
-                <div class="security-feed">
-                    <div class="feed-header">
-                        <h2 class="feed-title">Live Security Feed</h2>
-                        <div class="live-indicator">
-                            <div class="live-dot"></div>
-                            <span>LIVE</span>
-                        </div>
+                <!-- Critical Alerts -->
+                <div class="card card-full">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🚨</span> Critical Alerts
+                        </h2>
+                        <button class="btn btn-sm" onclick="clearAllAlerts()">Clear All</button>
                     </div>
-                    <div class="feed-content" id="securityFeed">
-                        <!-- Feed items will be populated by JavaScript -->
-                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Agent</th>
+                                <th>Location</th>
+                                <th>Message</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertsTable">
+                            <!-- Alert rows will be dynamically generated -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-
-        <!-- NEW: Command Center HQ Module -->
-        <div class="command-hq-module">
-            <div class="hq-header">
-                <h2 class="hq-title">
-                    <span>🛰️</span>
-                    <span>From the Command Center (Sentinel HQ)</span>
-                </h2>
-                <div class="hq-version">HQ Sync Preview – v2</div>
-            </div>
-            <div class="hq-status-grid">
-                <div class="hq-status-item">
-                    <div class="hq-status-icon">🧠</div>
-                    <div class="hq-status-content">
-                        <div class="hq-status-label">Global AI Link</div>
-                        <div class="hq-status-value">Secure uplink active • 847ms latency • Encrypted channel</div>
-                    </div>
-                    <div class="hq-status-indicator active"></div>
-                </div>
-                <div class="hq-status-item">
-                    <div class="hq-status-icon">🔄</div>
-                    <div class="hq-status-content">
-                        <div class="hq-status-label">Sub-Agent Sync</div>
-                        <div class="hq-status-value">All 10 agents validated with HQ • Last sync: 2m ago</div>
-                    </div>
-                    <div class="hq-status-indicator active"></div>
-                </div>
-                <div class="hq-status-item">
-                    <div class="hq-status-icon">🛡️</div>
-                    <div class="hq-status-content">
-                        <div class="hq-status-label">Last Security Directive</div>
-                        <div class="hq-status-value">Auto-rotate encryption keys • Deployed 14:23 UTC</div>
-                    </div>
-                    <div class="hq-status-indicator active"></div>
-                </div>
-                <div class="hq-status-item">
-                    <div class="hq-status-icon">🚨</div>
-                    <div class="hq-status-content">
-                        <div class="hq-status-label">Global Threat Feed</div>
-                        <div class="hq-status-value">No critical alerts • 2,847 threats processed globally</div>
-                    </div>
-                    <div class="hq-status-indicator active"></div>
-                </div>
-                <div class="hq-status-item">
-                    <div class="hq-status-icon">🔐</div>
-                    <div class="hq-status-content">
-                        <div class="hq-status-label">Fleet Sync Status</div>
-                        <div class="hq-status-value">92% of known nodes in compliance • 247/268 agents</div>
-                    </div>
-                    <div class="hq-status-indicator warning"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Enhanced System Metrics with more details -->
-        <div class="system-metrics">
-            <div class="metric-card">
-                <div class="metric-icon">🎯</div>
-                <div class="metric-value" id="threatCount">7</div>
-                <div class="metric-label">Active Threats</div>
-                <div class="metric-detail">2 critical, 3 high, 2 medium severity</div>
-                <div class="metric-trend trend-down">
-                    <span>↘</span>
-                    <span>-12% from yesterday</span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon">🖥️</div>
-                <div class="metric-value" id="deviceCount">247</div>
-                <div class="metric-label">Protected Devices</div>
-                <div class="metric-detail">89% servers, 11% endpoints • All encrypted</div>
-                <div class="metric-trend trend-up">
-                    <span>↗</span>
-                    <span>+3 new devices today</span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon">⏱️</div>
-                <div class="metric-value" id="uptime">99.98%</div>
-                <div class="metric-label">System Uptime</div>
-                <div class="metric-detail">847 days continuous operation</div>
-                <div class="metric-trend trend-stable">
-                    <span>→</span>
-                    <span>Above SLA target</span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon">🛡️</div>
-                <div class="metric-value" id="blockedCount">12.4K</div>
-                <div class="metric-label">Attacks Blocked</div>
-                <div class="metric-detail">Today: 2.8K SQL inj, 1.2K DDoS, 8.4K other</div>
-                <div class="metric-trend trend-up">
-                    <span>↗</span>
-                    <span>+15% increase detected</span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon">🔐</div>
-                <div class="metric-value" id="encryptionOps">2.1M</div>
-                <div class="metric-label">Crypto Ops/Sec</div>
-                <div class="metric-detail">AES-256 + Kyber-1024 hybrid mode</div>
-                <div class="metric-trend trend-stable">
-                    <span>→</span>
-                    <span>Optimal performance</span>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-icon">🚀</div>
-                <div class="metric-value" id="deploymentCount">47</div>
-                <div class="metric-label">Deployments Today</div>
-                <div class="metric-detail">32 encryption, 8 patches, 7 configs</div>
-                <div class="metric-trend trend-up">
-                    <span>↗</span>
-                    <span>Above daily average</span>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Agent Shutdown Modal -->
-    <div class="modal-overlay" id="agentShutdownModal" onclick="closeModalOnOverlay(event)">
-        <div class="modal">
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="openCommandCenter()">⚡</div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">⚠️ Agent Control Toggle</h2>
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <span class="modal-close" onclick="closeModal()">×</span>
             </div>
-            <div class="modal-content">
-                Toggle autonomous mode? When paused, manual control remains available through the AI chat bot CLI. System will fallback to local control mode if external APIs are offline.
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-primary" onclick="confirmAgentShutdown()">Toggle Agent Mode</button>
-                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancel</button>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
             </div>
         </div>
     </div>
 
-    <!-- AI Chat Widget -->
-    <div class="ai-chat-widget">
-        <div class="ai-chat-window" id="aiChatWindow">
-            <div class="ai-chat-header">
-                <div class="ai-chat-status">
-                    <span class="chat-status-dot"></span>
-                    <span>MAIN AGENT ONLINE</span>
-                </div>
-                <button class="ai-chat-close" onclick="toggleChat()">×</button>
-            </div>
-            <div class="cli-mode-indicator" id="cliModeIndicator">
-                ⚠️ CLI MODE - Main Agent Offline
-            </div>
-            <div class="ai-chat-messages" id="aiChatMessages">
-                <div class="ai-message">
-                    <div class="ai-message-bubble">
-                        Welcome to AI Sentinel-X Hybrid. I'm the Main Agent coordinating 10 sub-agents including VPNMonitor and 3 encryption specialists. Command Center HQ sync active with 847ms latency.
-                    </div>
-                    <div class="ai-message-time">Just now</div>
-                </div>
-            </div>
-            <div class="ai-chat-input-container">
-                <input 
-                    type="text" 
-                    class="ai-chat-input" 
-                    id="aiChatInput" 
-                    placeholder="Command the Main Agent"
-                    onkeypress="handleChatKeyPress(event)"
-                >
-                <button class="ai-chat-send" id="aiChatSend" onclick="sendChatMessage()">SEND</button>
-            </div>
-        </div>
-        <button class="ai-chat-toggle" onclick="toggleChat()">🤖</button>
-    </div>
-
-    <script src="shared.js"></script>
     <script>
-        // Dashboard-specific initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeDashboard();
+        // Initialize dashboard
+        function initDashboard() {
+            // Check if user is logged in
+            if (!sessionStorage.getItem('loggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Mark as logged in
+            sessionStorage.setItem('loggedIn', 'true');
+            sessionStorage.setItem('lastActivity', new Date().toISOString());
+
+            // Initialize components
+            renderActivityFeed();
+            renderAgentCards();
+            renderAlerts();
+            startLiveUpdates();
+            initCharts();
+        }
+
+        // User menu toggle
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenu = document.querySelector('.user-menu');
+            if (!userMenu.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
         });
 
-        function initializeDashboard() {
-            // Populate sub-agents from shared.js
-            populateSubAgents();
-            
-            // Initialize security feed
-            initializeSecurityFeed();
-            
-            // Start feed auto-generation
-            setInterval(() => {
-                generateRandomFeedItem();
-            }, 5000);
-            
-            // Update metrics periodically
-            setInterval(() => {
-                updateDashboardMetrics();
-            }, 3000);
-
-            // Simulate encryption status changes occasionally
-            setInterval(() => {
-                if (Math.random() > 0.97) {
-                    simulateEncryptionStatusChange();
-                }
-            }, 10000);
-
-            // Update HQ status indicators
-            setInterval(() => {
-                updateHQStatusIndicators();
-            }, 8000);
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('lastActivity');
         }
 
-        function populateSubAgents() {
-            const grid = document.getElementById('subAgentsGrid');
-            grid.innerHTML = '';
-
-            Object.keys(SubAgentConfigs).forEach(agentKey => {
-                const agent = SubAgentConfigs[agentKey];
-                const isNewAgent = ['encryptionDeployer', 'certificateManager', 'complianceMonitor', 'vpnMonitor'].includes(agentKey);
-                
-                const card = document.createElement('div');
-                card.className = 'sub-agent-card';
-                card.onclick = () => window.location.href = agent.link;
-                
-                card.innerHTML = `
-                    ${isNewAgent ? '<div class="new-agent-badge">NEW</div>' : ''}
-                    <div class="sub-agent-manage-btn" onclick="event.stopPropagation(); manageAgent('${agentKey}')">Manage</div>
-                    <div class="sub-agent-icon">${agent.icon}</div>
-                    <div class="sub-agent-info">
-                        <div class="sub-agent-name">${agent.name}</div>
-                        <div class="sub-agent-description">${agent.description}</div>
-                        <div class="sub-agent-activity">
-                            <span class="activity-dot"></span>
-                            <span>${agent.activity}</span>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function manageAgent(agentKey) {
-            const agent = SubAgentConfigs[agentKey];
-            if (sentinelChat && !SentinelState.chatOpen) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                sentinelChat?.addMessage(`Accessing ${agent.name} management interface...`, false, 'system');
-                setTimeout(() => {
-                    sentinelChat?.addMessage(`${agent.name}: ${agent.description}. Status: ${agent.status}. Use "help" for available commands.`, false);
-                }, 800);
-            }, 300);
-        }
-
-        function initializeSecurityFeed() {
-            addFeedItem('🤖 Main Agent initialized. All 10 sub-agents online.', '', 'Main Agent');
-            addFeedItem('🔐 Hybrid encryption active: Classical + Post-Quantum', 'encryption', 'EncryptionManager');
-            addFeedItem('🔒 VPNMonitor: 12 active connections monitored', '', 'VPNMonitor');
-            addFeedItem('🔧 EncryptionDeployer: 3/4 modules deployed successfully', 'encryption', 'EncryptionDeployer');
-            addFeedItem('📜 CertificateManager: 2 certificates expiring within 30 days', 'warning', 'CertificateManager');
-            addFeedItem('✅ ComplianceMonitor: SOC2 and ISO27001 compliance verified', '', 'ComplianceMonitor');
-            addFeedItem('🛡️ ThreatScanner detected suspicious activity on port 445', 'warning', 'ThreatScanner');
-        }
-
-        function addFeedItem(message, type = '', agent = '') {
-            const feed = document.getElementById('securityFeed');
-            const item = document.createElement('div');
-            item.className = `feed-item ${type}`;
-            
-            const time = new Date().toLocaleTimeString();
-            item.innerHTML = `
-                <div class="feed-time">${time}</div>
-                <div class="feed-message">${message}</div>
-                ${agent ? `<div class="feed-agent">via ${agent}</div>` : ''}
-            `;
-            
-            feed.insertBefore(item, feed.firstChild);
-            
-            // Keep only last 10 items
-            while (feed.children.length > 10) {
-                feed.removeChild(feed.lastChild);
-            }
-        }
-
-        // Enhanced feed messages including VPNMonitor
-        const feedMessages = [
-            { msg: '🛡️ Blocked SQL injection attempt on /api/users', type: 'danger', agent: 'ThreatScanner' },
-            { msg: '🌐 New device discovered: 192.168.1.' + Math.floor(Math.random() * 254), type: '', agent: 'NetworkMapper' },
-            { msg: '🔐 Key rotation completed. Kyber-1024 + AES-256', type: 'encryption', agent: 'EncryptionManager' },
-            { msg: '🔧 Encryption deployed to ' + Math.floor(Math.random() * 5 + 1) + ' new devices', type: 'encryption', agent: 'EncryptionDeployer' },
-            { msg: '📜 Certificate auto-renewed for *.sentinel-x.com', type: 'encryption', agent: 'CertificateManager' },
-            { msg: '✅ Compliance scan completed: ' + Math.floor(Math.random() * 3 + 97) + '% score', type: '', agent: 'ComplianceMonitor' },
-            { msg: '🔒 VPN connection from ' + ['Germany', 'Japan', 'Canada', 'UK'][Math.floor(Math.random() * 4)] + ' authenticated', type: '', agent: 'VPNMonitor' },
-            { msg: '🔒 VPN certificate renewal for client ' + Math.floor(Math.random() * 99 + 1), type: 'encryption', agent: 'VPNMonitor' },
-            { msg: '🔒 Suspicious VPN login attempt blocked from ' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255) + '.*.*', type: 'warning', agent: 'VPNMonitor' },
-            { msg: '⚔️ Honeypot triggered by external scanner', type: 'warning', agent: 'DefenseOrchestrator' },
-            { msg: '📊 AI model accuracy: 99.' + Math.floor(Math.random() * 9) + '%', type: '', agent: 'AnalyticsEngine' },
-            { msg: '📝 Audit log signed with Dilithium-3 signature', type: '', agent: 'LogAgent' },
-            { msg: '🧠 Neural pattern learned from new attack vector', type: '', agent: 'AI Engine' },
-            { msg: '🎯 Predicted attack pattern, preemptive defense deployed', type: 'warning', agent: 'ThreatScanner' },
-            { msg: '✅ System health check passed. All agents operational', type: '', agent: 'Main Agent' },
-            { msg: '🛰️ Command Center HQ sync: Global threat feed updated', type: '', agent: 'Command Center' },
-            { msg: '🔐 Fleet-wide encryption key rotation initiated by HQ', type: 'encryption', agent: 'Command Center' }
+        // Activity Feed
+        const activities = [
+            { type: 'success', icon: '✓', message: 'Agent SX-001 successfully updated', time: 'Just now' },
+            { type: 'warning', icon: '⚠', message: 'High CPU usage detected on SX-003', time: '2 min ago' },
+            { type: 'danger', icon: '✕', message: 'Failed login attempt for SX-005', time: '5 min ago' },
+            { type: 'info', icon: 'ℹ', message: 'Scheduled maintenance completed', time: '10 min ago' },
+            { type: 'success', icon: '✓', message: 'Backup process completed', time: '15 min ago' },
+            { type: 'warning', icon: '⚠', message: 'Certificate expiring soon for SX-007', time: '20 min ago' }
         ];
 
-        function generateRandomFeedItem() {
-            const item = feedMessages[Math.floor(Math.random() * feedMessages.length)];
-            addFeedItem(item.msg, item.type, item.agent);
+        function renderActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = activities.map((activity, index) => `
+                <div class="activity-item ${activity.type}" style="animation-delay: ${index * 0.1}s">
+                    <div class="activity-icon ${activity.type}">${activity.icon}</div>
+                    <div class="activity-content">
+                        <div class="activity-message">${activity.message}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function updateDashboardMetrics() {
-            // Occasionally change threat count
-            if (Math.random() > 0.9) {
-                const threatEl = document.getElementById('threatCount');
-                const current = parseInt(threatEl.textContent);
-                threatEl.textContent = Math.max(0, current + Math.floor(Math.random() * 3 - 1));
-            }
-            
-            // Update device count
-            if (Math.random() > 0.95) {
-                const deviceEl = document.getElementById('deviceCount');
-                const current = parseInt(deviceEl.textContent);
-                deviceEl.textContent = current + Math.floor(Math.random() * 3);
-            }
-            
-            // Update blocked count
-            const blockedEl = document.getElementById('blockedCount');
-            const blocked = parseFloat(blockedEl.textContent.replace('K', ''));
-            blockedEl.textContent = (blocked + 0.1).toFixed(1) + 'K';
-            
-            // Update crypto ops
-            const cryptoEl = document.getElementById('encryptionOps');
-            const ops = 2.0 + Math.random() * 0.3;
-            cryptoEl.textContent = ops.toFixed(1) + 'M';
+        // Agent Cards
+        const topAgents = [
+            { id: 'SX-001', name: 'TechCorp Inc', location: 'New York, US', status: 'active', threats: '12.4K', cpu: '23%', uptime: '99.9%' },
+            { id: 'SX-002', name: 'CyberShield LLC', location: 'London, UK', status: 'active', threats: '8.7K', cpu: '18%', uptime: '99.8%' },
+            { id: 'SX-007', name: 'NetDefender', location: 'Singapore, SG', status: 'active', threats: '11.2K', cpu: '31%', uptime: '99.7%' }
+        ];
 
-            // Update decisions per minute
-            const decisionsEl = document.getElementById('decisionsPerMin');
-            const decisions = 2.3 + Math.random() * 0.3;
-            decisionsEl.textContent = decisions.toFixed(1) + 'K';
-
-            // Update deployment count
-            const deploymentEl = document.getElementById('deploymentCount');
-            if (Math.random() > 0.92) {
-                const current = parseInt(deploymentEl.textContent);
-                deploymentEl.textContent = current + 1;
-            }
+        function renderAgentCards() {
+            const container = document.querySelector('.agent-grid');
+            container.innerHTML = topAgents.map(agent => `
+                <div class="agent-card" onclick="viewAgent('${agent.id}')">
+                    <div class="agent-header">
+                        <span class="agent-id">${agent.id}</span>
+                        <span class="agent-status ${agent.status}">
+                            <span class="status-dot"></span>
+                            ${agent.status}
+                        </span>
+                    </div>
+                    <div class="agent-info">
+                        <div class="agent-name">${agent.name}</div>
+                        <div class="agent-location">📍 ${agent.location}</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="agent-metric">
+                            <div class="metric-value">${agent.threats}</div>
+                            <div class="metric-label">Threats/Hr</div>
+                        </div>
+                        <div class="agent-metric">
+                            <div class="metric-value">${agent.cpu}</div>
+                            <div class="metric-label">CPU Usage</div>
+                        </div>
+                        <div class="agent-metric">
+                            <div class="metric-value">${agent.uptime}</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function simulateEncryptionStatusChange() {
-            // Rarely simulate an encryption layer going offline
-            if (Math.random() > 0.8) {
-                const classicalStatus = document.getElementById('classicalStatus');
-                const quantumStatus = document.getElementById('quantumStatus');
+        // Alerts Table
+        const alerts = [
+            { type: 'danger', agent: 'SX-005', location: 'Berlin, DE', message: 'Agent offline for 2 hours', time: '2 min ago' },
+            { type: 'warning', agent: 'SX-003', location: 'Tokyo, JP', message: 'DDoS attack detected', time: '15 min ago' },
+            { type: 'danger', agent: 'SX-008', location: 'Dubai, AE', message: 'Critical security breach attempt', time: '1 hour ago' }
+        ];
+
+        function renderAlerts() {
+            const tbody = document.getElementById('alertsTable');
+            tbody.innerHTML = alerts.map(alert => `
+                <tr>
+                    <td><span class="agent-status ${alert.type}"><span class="status-dot"></span> ${alert.type}</span></td>
+                    <td><strong>${alert.agent}</strong></td>
+                    <td>${alert.location}</td>
+                    <td>${alert.message}</td>
+                    <td>${alert.time}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="viewAlert('${alert.agent}')">View</button>
+                        <button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize Charts (placeholder)
+        function initCharts() {
+            // In a real implementation, you would use Chart.js or similar
+            console.log('Charts initialized');
+        }
+
+        // Live Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Add new activity
+                const newActivity = {
+                    type: ['success', 'warning', 'info', 'danger'][Math.floor(Math.random() * 4)],
+                    icon: ['✓', '⚠', 'ℹ', '✕'][Math.floor(Math.random() * 4)],
+                    message: 'System update: ' + Math.random().toString(36).substr(2, 9),
+                    time: 'Just now'
+                };
                 
-                if (Math.random() > 0.5) {
-                    // Classical layer issue
-                    classicalStatus.className = 'status-light inactive';
-                    addFeedItem('⚠️ Classical encryption layer temporarily offline - switching to hybrid-only mode', 'warning', 'EncryptionManager');
-                    
-                    // Restore after 3 seconds
-                    setTimeout(() => {
-                        classicalStatus.className = 'status-light active';
-                        addFeedItem('✅ Classical encryption layer restored - hybrid mode active', 'encryption', 'EncryptionManager');
-                    }, 3000);
-                } else {
-                    // Quantum layer issue
-                    quantumStatus.className = 'status-light inactive';
-                    addFeedItem('⚠️ Hybrid encryption layer recalibrating - maintaining classical protection', 'warning', 'EncryptionManager');
-                    
-                    // Restore after 3 seconds
-                    setTimeout(() => {
-                        quantumStatus.className = 'status-light active';
-                        addFeedItem('✅ Hybrid encryption layer online - dual-layer protection restored', 'encryption', 'EncryptionManager');
-                    }, 3000);
-                }
-            }
+                activities.unshift(newActivity);
+                activities.pop();
+                renderActivityFeed();
+
+                // Update stats
+                document.querySelectorAll('.stat-value').forEach(el => {
+                    if (el.textContent.includes('K') || el.textContent.includes('M')) {
+                        const current = parseFloat(el.textContent);
+                        const change = (Math.random() - 0.5) * 0.1;
+                        el.textContent = (current + change).toFixed(1) + el.textContent.slice(-1);
+                    }
+                });
+            }, 5000);
         }
 
-        function updateHQStatusIndicators() {
-            // Occasionally update HQ status indicators
-            const indicators = document.querySelectorAll('.hq-status-indicator');
-            indicators.forEach(indicator => {
-                if (Math.random() > 0.95) {
-                    // Briefly show warning state
-                    indicator.className = 'hq-status-indicator warning';
-                    setTimeout(() => {
-                        indicator.className = 'hq-status-indicator active';
-                    }, 2000);
-                }
-            });
-
-            // Update sync status text occasionally
-            if (Math.random() > 0.9) {
-                const syncItems = document.querySelectorAll('.hq-status-value');
-                const latency = Math.floor(Math.random() * 200 + 700); // 700-900ms
-                if (syncItems[0]) {
-                    syncItems[0].textContent = `Secure uplink active • ${latency}ms latency • Encrypted channel`;
-                }
-            }
+        // Modal Functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
         }
 
-        function showMainAgentDetails() {
-            if (!SentinelState.chatOpen && sentinelChat) {
-                sentinelChat.toggle();
-            }
-            setTimeout(() => {
-                sentinelChat?.addMessage('Main Agent: Central AI orchestrating 10 sub-agents including VPNMonitor and 3 encryption specialists. Currently coordinating ThreatScanner, NetworkMapper, DefenseOrchestrator, EncryptionManager, EncryptionDeployer, CertificateManager, ComplianceMonitor, VPNMonitor, AnalyticsEngine, and LogAgent. All communications protected with hybrid-resistant encryption. Command Center HQ sync active with 847ms latency.', false);
-            }, 300);
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
         }
 
-        // Global functions for compatibility - leverage shared.js
-        window.toggleChat = () => sentinelChat?.toggle();
-        window.sendChatMessage = () => {
-            const input = document.getElementById('aiChatInput');
-            if (input && input.value.trim()) {
-                sentinelChat?.sendMessage(input.value.trim());
-                input.value = '';
-            }
-        };
-        window.handleChatKeyPress = (e) => {
-            if (e.key === 'Enter') {
-                sendChatMessage();
-            }
-        };
-        window.showAgentShutdownModal = () => document.getElementById('agentShutdownModal').style.display = 'flex';
-        window.closeModal = () => document.getElementById('agentShutdownModal').style.display = 'none';
-        window.closeModalOnOverlay = (e) => {if (e.target.classList.contains('modal-overlay')) closeModal();};
-        window.confirmAgentShutdown = () => {
-            SentinelState.agentActive = !SentinelState.agentActive;
+        // Command Center
+        function openCommandCenter() {
+            showModal('🎮 Command Center', `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <button class="btn btn-primary" style="padding: 2rem; font-size: 1.1rem;" onclick="massUpdate()">
+                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🔄</span>
+                        Mass Update
+                    </button>
+                    <button class="btn btn-danger" style="padding: 2rem; font-size: 1.1rem;" onclick="emergencyShutdown()">
+                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🚨</span>
+                        Emergency Shutdown
+                    </button>
+                    <button class="btn" style="padding: 2rem; font-size: 1.1rem;" onclick="deployNewAgent()">
+                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🚀</span>
+                        Deploy New Agent
+                    </button>
+                    <button class="btn" style="padding: 2rem; font-size: 1.1rem;" onclick="generateReport()">
+                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📊</span>
+                        Generate Report
+                    </button>
+                </div>
+            `);
+        }
+
+        // Action Functions
+        function viewAgent(id) {
+            showModal(`Agent Details: ${id}`, `
+                <div class="form-group">
+                    <label class="form-label">Agent Information</label>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <strong>Status:</strong> <span class="agent-status active"><span class="status-dot"></span> Active</span>
+                            </div>
+                            <div>
+                                <strong>Location:</strong> New York, US
+                            </div>
+                            <div>
+                                <strong>Uptime:</strong> 99.98%
+                            </div>
+                            <div>
+                                <strong>Last Check:</strong> 2 min ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Performance Metrics</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">12.4K</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Threats/Hour</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">23%</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">CPU Usage</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">847MB</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Memory</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                    <button class="btn btn-danger" onclick="toggleAgent('${id}')">Disable Agent</button>
+                </div>
+            `);
+        }
+
+        function massUpdate() {
+            showModal('🔄 Mass Update', `
+                <form onsubmit="event.preventDefault(); deployMassUpdate();">
+                    <div class="form-group">
+                        <label class="form-label">Update Type</label>
+                        <select class="form-select" required>
+                            <option value="">Select update type...</option>
+                            <option value="security">Security Patch v2.2.1</option>
+                            <option value="feature">Feature Update v2.3.0</option>
+                            <option value="critical">Critical Hotfix v2.2.0a</option>
+                            <option value="quantum">Quantum Encryption Update</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Agents</label>
+                        <select class="form-select" required>
+                            <option value="all">All Agents (2,847)</option>
+                            <option value="active">Active Agents Only (2,483)</option>
+                            <option value="region">By Region</option>
+                            <option value="custom">Custom Selection</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deployment Strategy</label>
+                        <select class="form-select" required>
+                            <option value="rolling">Rolling Update (Recommended)</option>
+                            <option value="canary">Canary Deployment (10% first)</option>
+                            <option value="immediate">Immediate (All at once)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Schedule</label>
+                        <input type="datetime-local" class="form-input" value="${new Date().toISOString().slice(0, 16)}">
+                    </div>
+                    <div style="background: rgba(255, 170, 51, 0.1); border: 1px solid var(--warning); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong>⚠️ Warning:</strong> This will update all selected agents. Ensure you have tested the update in staging.
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Deploy Update</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function deployMassUpdate() {
+            closeModal();
+            showModal('🚀 Update Deployed', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">✓</div>
+                    <h3 style="margin-bottom: 1rem;">Mass update initiated successfully!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Update deployment has started for 2,847 agents.<br>
+                        Estimated completion time: 15 minutes
+                    </p>
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function emergencyShutdown() {
+            showModal('🚨 Emergency Shutdown', `
+                <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--danger); margin-bottom: 0.5rem;">⚠️ CRITICAL ACTION</h3>
+                    <p>This will immediately disable ALL agents globally. This action should only be used in extreme circumstances.</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reason for shutdown</label>
+                    <select class="form-select" required id="shutdownReason">
+                        <option value="">Select reason...</option>
+                        <option value="breach">Security breach detected</option>
+                        <option value="attack">Coordinated attack</option>
+                        <option value="vulnerability">Critical vulnerability</option>
+                        <option value="other">Other emergency</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type "SHUTDOWN" to confirm</label>
+                    <input type="text" class="form-input" id="shutdownConfirm" placeholder="Type SHUTDOWN to confirm">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-danger" onclick="executeShutdown()">Execute Emergency Shutdown</button>
+                    <button class="btn" onclick="closeModal()">Cancel</button>
+                </div>
+            `);
+        }
+
+        function executeShutdown() {
+            const reason = document.getElementById('shutdownReason').value;
+            const confirm = document.getElementById('shutdownConfirm').value;
             
-            // Update UI elements
-            const agentStatus = document.querySelector('.agent-status');
-            const agentTitle = document.querySelector('.agent-title');
-            const agentStatusText = document.querySelector('.agent-status-text');
+            if (!reason) {
+                alert('Please select a reason for shutdown');
+                return;
+            }
             
-            if (SentinelState.agentActive) {
-                agentStatus.style.background = 'rgba(0, 255, 136, 0.1)';
-                agentStatus.style.borderColor = '#00ff88';
-                agentTitle.textContent = 'AI Agent Active';
-                agentTitle.style.color = 'var(--primary)';
-                agentStatusText.textContent = 'Autonomous with Manual Override';
-            } else {
-                agentStatus.style.background = 'rgba(255, 170, 0, 0.1)';
-                agentStatus.style.borderColor = '#ffaa00';
-                agentTitle.textContent = 'AI Agent Paused';
-                agentTitle.style.color = '#ffaa00';
-                agentStatusText.textContent = 'Manual Control Only';
+            if (confirm !== 'SHUTDOWN') {
+                alert('Please type SHUTDOWN to confirm');
+                return;
             }
             
             closeModal();
-            
-            if (SentinelState.chatOpen && sentinelChat) {
-                const status = SentinelState.agentActive ? 'resumed autonomous operation' : 'switched to manual control mode';
-                sentinelChat.addMessage(`⚠️ Main Agent has ${status}. CLI mode available if external connections fail. Command Center HQ sync ${SentinelState.agentActive ? 'maintained' : 'reduced'}.`, false, 'system');
-            }
+            showModal('🚨 Shutdown Executed', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--danger);">⚠️</div>
+                    <h3 style="margin-bottom: 1rem; color: var(--danger);">Emergency shutdown executed</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        All 2,847 agents have been disabled.<br>
+                        Incident logged and team notified.
+                    </p>
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
 
-            // Update Command Center feed based on agent status
-            if (SentinelState.agentActive) {
-                addFeedItem('🛰️ Command Center: Agent resumed, full HQ coordination restored', 'encryption', 'Command Center');
-            } else {
-                addFeedItem('⚠️ Command Center: Agent paused, local control mode active', 'warning', 'Command Center');
+        function deployNewAgent() {
+            showModal('🚀 Deploy New Agent', `
+                <form onsubmit="event.preventDefault(); submitNewAgent();">
+                    <div class="form-group">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" class="form-input" placeholder="Enter customer name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deployment Location</label>
+                        <select class="form-select" required>
+                            <option value="">Select region...</option>
+                            <option value="us-east">US East (Virginia)</option>
+                            <option value="us-west">US West (Oregon)</option>
+                            <option value="eu-west">EU West (Ireland)</option>
+                            <option value="eu-central">EU Central (Frankfurt)</option>
+                            <option value="ap-south">Asia Pacific (Singapore)</option>
+                            <option value="ap-northeast">Asia Pacific (Tokyo)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Type</label>
+                        <select class="form-select" required>
+                            <option value="essential">Essential ($29/mo) - Single Server</option>
+                            <option value="business">Business ($149/mo) - Multi-Site</option>
+                            <option value="enterprise">Enterprise ($499/mo) - Global Infrastructure</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Encryption Configuration</label>
+                        <select class="form-select" required>
+                            <option value="hybrid">Hybrid (Classical + Quantum) - Recommended</option>
+                            <option value="classical">Classical Only</option>
+                            <option value="quantum">Quantum-Resistant Only</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Deploy Agent</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function submitNewAgent() {
+            closeModal();
+            showModal('✅ Agent Deployed', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--success);">🚀</div>
+                    <h3 style="margin-bottom: 1rem;">New agent deployed successfully!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Agent ID: <strong>SX-${Math.floor(Math.random() * 9000) + 1000}</strong>
+                    </p>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Deployment credentials have been sent to the customer email.<br>
+                        The agent will appear in the dashboard once it comes online.
+                    </p>
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function generateReport() {
+            showModal('📊 Generate Report', `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateFinancialReport()">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+                            <h3>Financial Report</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Revenue, MRR, customer metrics</p>
+                        </div>
+                    </div>
+                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateSecurityReport()">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+                            <h3>Security Report</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Threats, vulnerabilities, incidents</p>
+                        </div>
+                    </div>
+                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generatePerformanceReport()">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+                            <h3>Performance Report</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">System health, uptime, metrics</p>
+                        </div>
+                    </div>
+                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateComplianceReport()">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                            <h3>Compliance Report</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">SOC2, ISO27001, audit logs</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function viewAlert(agent) {
+            showModal(`Alert Details: ${agent}`, `
+                <div class="form-group">
+                    <label class="form-label">Alert Information</label>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <div><strong>Type:</strong> Critical Security Breach Attempt</div>
+                        <div><strong>Time:</strong> ${new Date().toLocaleString()}</div>
+                        <div><strong>Source:</strong> 185.220.101.45 (Tor Exit Node)</div>
+                        <div><strong>Attack Vector:</strong> SQL Injection</div>
+                        <div><strong>Status:</strong> Blocked by AI Defense</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                    <button class="btn" onclick="investigateAlert()">Investigate</button>
+                </div>
+            `);
+        }
+
+        function dismissAlert(btn) {
+            const row = btn.closest('tr');
+            row.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => row.remove(), 300);
+        }
+
+        function clearAllAlerts() {
+            if (confirm('Clear all alerts? This action cannot be undone.')) {
+                document.getElementById('alertsTable').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No active alerts
+                        </td>
+                    </tr>
+                `;
             }
-        };
-        window.handleLogout = () => {
-            if (confirm('Are you sure you want to logout? The AI agent will continue protecting your network autonomously with Command Center oversight.')) {
-                localStorage.removeItem('sentinel_auth');
-                localStorage.removeItem('sentinel_scale');
-                window.location.href = 'index.html';
+        }
+
+        // User Menu Functions
+        function showProfile() {
+            showModal('👤 Admin Profile', `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--accent), #00cc70); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--primary-bg);">SA</div>
+                    <h3>Super Admin</h3>
+                    <p style="color: var(--text-secondary);">admin@aisentinel-x.com</p>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Role:</strong> System Administrator
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Access Level:</strong> Full System Access
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Last Login:</strong> ${new Date().toLocaleString()}
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Session Duration:</strong> ${Math.floor(Math.random() * 120) + 30} minutes
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function showSettings() {
+            showModal('⚙️ Settings', `
+                <form onsubmit="event.preventDefault(); saveSettings();">
+                    <div class="form-group">
+                        <label class="form-label">Dashboard Refresh Rate</label>
+                        <select class="form-select">
+                            <option value="5">5 seconds</option>
+                            <option value="10">10 seconds</option>
+                            <option value="30" selected>30 seconds</option>
+                            <option value="60">1 minute</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notifications</label>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Critical alerts
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> System updates
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Performance reports
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Security incidents
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Theme</label>
+                        <select class="form-select">
+                            <option value="dark" selected>Dark Mode</option>
+                            <option value="darker">Darker Mode</option>
+                            <option value="midnight">Midnight Black</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveSettings() {
+            closeModal();
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success);
+                color: var(--primary-bg);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+            `;
+            notification.textContent = '✓ Settings saved successfully';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function showApiKeys() {
+            showModal('🔑 API Keys', `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>Production API Key</strong>
+                            <button class="btn btn-sm" onclick="copyToClipboard('sk_live_****7a8b')">Copy</button>
+                        </div>
+                        <code style="font-family: monospace; color: var(--text-secondary);">
+                            sk_live_****************************7a8b
+                        </code>
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
+                            Created: Jan 15, 2025 • Last used: 2 hours ago
+                        </div>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>Test API Key</strong>
+                            <button class="btn btn-sm" onclick="copyToClipboard('sk_test_****9c2d')">Copy</button>
+                        </div>
+                        <code style="font-family: monospace; color: var(--text-secondary);">
+                            sk_test_****************************9c2d
+                        </code>
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
+                            Created: Jan 10, 2025 • Last used: Yesterday
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="generateNewKey()">Generate New Key</button>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--secondary-bg);
+                color: var(--text-primary);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                border: 1px solid var(--accent);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+            `;
+            notification.textContent = '✓ Copied to clipboard';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+
+        function showActivityLog() {
+            showModal('📋 Activity Log', `
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${[...Array(10)].map((_, i) => `
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>${new Date(Date.now() - i * 3600000).toLocaleTimeString()}</strong>
+                                <span style="margin-left: auto; color: var(--text-secondary);">IP: 192.168.1.${100 + i}</span>
+                            </div>
+                            <div style="color: var(--text-secondary);">
+                                ${['Viewed agent details', 'Updated system settings', 'Generated report', 'Deployed new agent', 'Cleared alerts'][i % 5]}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function downloadReport() {
+            showModal('📊 Download Report', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📥</div>
+                    <h3 style="margin-bottom: 1rem;">Generating comprehensive report...</h3>
+                    <div style="width: 100%; background: var(--secondary-bg); border-radius: 20px; height: 8px; margin-bottom: 1rem;">
+                        <div style="width: 75%; background: var(--accent); height: 100%; border-radius: 20px; transition: width 1s ease;"></div>
+                    </div>
+                    <p style="color: var(--text-secondary);">
+                        Compiling data from all 2,847 agents...
+                    </p>
+                </div>
+            `);
+            
+            setTimeout(() => {
+                closeModal();
+                // Trigger download
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: var(--success);
+                    color: var(--primary-bg);
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+                    animation: slideIn 0.3s ease;
+                    z-index: 3000;
+                `;
+                notification.textContent = '✓ Report downloaded successfully';
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }, 2000);
+        }
+
+        // Filter Map
+        function filterMap(status) {
+            const buttons = document.querySelectorAll('.map-control-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // In a real implementation, this would filter map markers
+            console.log(`Filtering map by: ${status}`);
+        }
+
+        // Sidebar Functions
+        function showDashboard() { location.reload(); }
+        function showAgents() { alert('Agents view coming soon...'); }
+        function showThreats() { alert('Threats view coming soon...'); }
+        function showDeployments() { alert('Deployments view coming soon...'); }
+        function showMaintenance() { alert('Maintenance view coming soon...'); }
+        function showBackups() { alert('Backups view coming soon...'); }
+        function showPerformance() { alert('Performance view coming soon...'); }
+        function showFinancials() { alert('Financials view coming soon...'); }
+        function showReports() { alert('Reports view coming soon...'); }
+        function showTickets() { alert('Tickets view coming soon...'); }
+        function showDocumentation() { alert('Documentation coming soon...'); }
+
+        // Report Functions
+        function generateFinancialReport() { closeModal(); downloadReport(); }
+        function generateSecurityReport() { closeModal(); downloadReport(); }
+        function generatePerformanceReport() { closeModal(); downloadReport(); }
+        function generateComplianceReport() { closeModal(); downloadReport(); }
+        function generateNewKey() { alert('New API key generated successfully!'); showApiKeys(); }
+        function investigateAlert() { alert('Opening investigation dashboard...'); }
+        function toggleAgent(id) { alert(`Agent ${id} toggled successfully!`); }
+        function showAllAgents() { showAgents(); }
+
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
             }
-        };
+        });
+
+        // Session management
+        window.addEventListener('beforeunload', function() {
+            sessionStorage.setItem('lastActivity', new Date().toISOString());
+        });
+
+        // Check session timeout (30 minutes)
+        setInterval(() => {
+            const lastActivity = sessionStorage.getItem('lastActivity');
+            if (lastActivity) {
+                const timeDiff = new Date() - new Date(lastActivity);
+                if (timeDiff > 30 * 60 * 1000) { // 30 minutes
+                    alert('Session expired. Please log in again.');
+                    sessionStorage.removeItem('loggedIn');
+                    window.location.href = 'index.html';
+                }
+            }
+        }, 60000); // Check every minute
+
+        // Initialize on load
+        window.onload = initDashboard;
     </script>
 </body>
 </html>
