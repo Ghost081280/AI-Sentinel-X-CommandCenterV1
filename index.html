@@ -89,11 +89,16 @@
             padding: 3rem;
             width: 100%;
             max-width: 450px;
+            max-height: 90vh;
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
                         0 0 100px rgba(0, 255, 136, 0.1);
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            /* Smooth scrolling */
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         .login-container::before {
@@ -337,9 +342,14 @@
 
         /* Responsive */
         @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+
             .login-container {
-                margin: 1rem;
-                padding: 2rem;
+                margin: 0.5rem;
+                padding: 1.5rem;
+                max-height: 95vh;
             }
 
             .logo-icon {
@@ -354,6 +364,26 @@
             .form-input {
                 font-size: 16px;
             }
+        }
+
+        /* Custom Scrollbar */
+        .login-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .login-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        .login-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+            opacity: 0.7;
+        }
+
+        .login-container::-webkit-scrollbar-thumb:hover {
+            background: #00cc77;
         }
     </style>
 </head>
