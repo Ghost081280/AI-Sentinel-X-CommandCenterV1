@@ -523,7 +523,6 @@
                     id="username" 
                     class="form-input" 
                     placeholder="Enter your username"
-                    value="demo"
                     required
                     autocomplete="username"
                     autocapitalize="off"
@@ -539,7 +538,6 @@
                     id="password" 
                     class="form-input" 
                     placeholder="Enter your password"
-                    value="demo"
                     required
                     autocomplete="current-password"
                     autocapitalize="off"
@@ -566,11 +564,11 @@
 
         <!-- Demo Info -->
         <div class="demo-info">
-            <div class="demo-title">🚀 Demo Access Ready</div>
+            <div class="demo-title">🚀 Demo Access Available</div>
             <div class="demo-credentials">
-                <strong>Demo Credentials Pre-filled</strong><br>
+                <strong>Demo Login Credentials:</strong><br>
                 Username: <strong>demo</strong> | Password: <strong>demo</strong><br>
-                Click "ACCESS COMMAND CENTER" to login
+                Type the credentials above to access the system
             </div>
             <div class="demo-note">
                 Experience the full AI Sentinel-X cybersecurity platform with all features unlocked
@@ -664,7 +662,7 @@
                     errorMessage.style.display = 'block';
                     
                     // Clear password field
-                    document.getElementById('password').value = 'demo';
+                    document.getElementById('password').value = '';
                 }
             }, 1500);
             
@@ -705,11 +703,10 @@
                 }
             });
 
-            // Add visual feedback for pre-filled demo credentials
+            // Add visual feedback for demo credentials display
             const demoCredentials = document.querySelector('.demo-credentials');
             demoCredentials.addEventListener('click', function() {
-                document.getElementById('username').value = 'demo';
-                document.getElementById('password').value = 'demo';
+                // Just focus on username field when clicked
                 document.getElementById('username').focus();
             });
         };
