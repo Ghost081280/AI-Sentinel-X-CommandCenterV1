@@ -14,12 +14,13 @@
         :root {
             --primary-bg: #0a0a0a;
             --secondary-bg: #1a1a1a;
-            --card-bg: #0f0f0f;
+            --card-bg: rgba(15, 15, 15, 0.95);
             --accent: #00ff88;
             --danger: #ff3366;
             --text-primary: #ffffff;
             --text-secondary: #888888;
             --border-color: #2a2a2a;
+            --glow-primary: rgba(0, 255, 136, 0.3);
         }
 
         body {
@@ -32,6 +33,7 @@
             justify-content: center;
             overflow: hidden;
             position: relative;
+            padding: 20px;
         }
 
         /* Animated Background */
@@ -81,22 +83,23 @@
             }
         }
 
-        /* Login Container */
+        /* Main Login Container */
         .login-container {
-            background: rgba(15, 15, 15, 0.95);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 3rem;
+            border-radius: 24px;
+            padding: 2rem;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             max-height: 90vh;
             backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
-                        0 0 100px rgba(0, 255, 136, 0.1);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(0, 255, 136, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;
-            /* Smooth scrolling */
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
@@ -121,44 +124,45 @@
         /* Logo Section */
         .logo-section {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .logo-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             animation: pulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px var(--glow-primary));
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.9; }
         }
 
         .logo-text {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--accent);
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 30px var(--glow-primary);
             letter-spacing: 2px;
+            margin-bottom: 0.25rem;
         }
 
         .logo-subtitle {
             color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
         }
 
         /* Form Styles */
         .login-form {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
         }
 
@@ -166,56 +170,63 @@
             display: block;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 500;
         }
 
         .form-input {
             width: 100%;
-            padding: 1rem;
+            padding: 0.875rem 1rem;
             background: var(--secondary-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3),
-                        inset 0 0 20px rgba(0, 255, 136, 0.05);
+            box-shadow: 
+                0 0 0 3px rgba(0, 255, 136, 0.1),
+                0 0 20px rgba(0, 255, 136, 0.2),
+                inset 0 0 20px rgba(0, 255, 136, 0.05);
+            transform: translateY(-1px);
         }
 
         .form-input::placeholder {
             color: var(--text-secondary);
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         /* Input Icons */
         .input-icon {
             position: absolute;
-            right: 1rem;
-            top: 2.75rem;
+            right: 0.875rem;
+            top: 2.375rem;
             color: var(--text-secondary);
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .form-input:focus ~ .input-icon {
             color: var(--accent);
+            transform: scale(1.1);
         }
 
         /* Login Button */
         .login-button {
             width: 100%;
             padding: 1rem;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent) 0%, #00cc77 100%);
             color: var(--primary-bg);
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -223,7 +234,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
         }
 
         .login-button::before {
@@ -241,7 +253,7 @@
 
         .login-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
         }
 
         .login-button:hover::before {
@@ -253,13 +265,18 @@
             transform: translateY(0);
         }
 
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Additional Options */
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
+            margin: 1rem 0;
         }
 
         .remember-me {
@@ -267,7 +284,7 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8rem;
         }
 
         .remember-me input[type="checkbox"] {
@@ -279,12 +296,12 @@
         .forgot-link {
             color: var(--accent);
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
         }
 
         .forgot-link:hover {
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px var(--glow-primary);
         }
 
         /* Security Badge */
@@ -293,9 +310,13 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
         }
 
         .security-badge svg {
@@ -312,7 +333,7 @@
             padding: 0.75rem;
             margin-bottom: 1rem;
             color: var(--danger);
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             display: none;
             animation: shake 0.5s ease-in-out;
         }
@@ -326,8 +347,8 @@
         /* Loading State */
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 2px solid var(--primary-bg);
             border-radius: 50%;
             border-top-color: transparent;
@@ -340,30 +361,38 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            body {
-                padding: 0.5rem;
-            }
+        /* Demo Info */
+        .demo-info {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
 
-            .login-container {
-                margin: 0.5rem;
-                padding: 1.5rem;
-                max-height: 95vh;
-            }
+        .demo-title {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
 
-            .logo-icon {
-                font-size: 3rem;
-            }
+        .demo-credentials {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
 
-            .logo-text {
-                font-size: 1.5rem;
-            }
-            
-            /* Fix iOS zoom on input focus */
-            .form-input {
-                font-size: 16px;
-            }
+        .demo-note {
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
         }
 
         /* Custom Scrollbar */
@@ -384,6 +413,84 @@
 
         .login-container::-webkit-scrollbar-thumb:hover {
             background: #00cc77;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container {
+                padding: 1.5rem;
+                max-width: 100%;
+                max-height: 95vh;
+            }
+
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+            }
+
+            /* Fix iOS zoom on input focus */
+            .form-input {
+                font-size: 16px;
+            }
+
+            .demo-credentials {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .logo-icon {
+                font-size: 2rem;
+            }
+
+            .logo-text {
+                font-size: 1rem;
+            }
+
+            .form-input {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container {
+                padding: 1rem;
+                max-height: 95vh;
+            }
+
+            .logo-section {
+                margin-bottom: 1rem;
+            }
+
+            .logo-icon {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+
+            .demo-info {
+                margin-top: 1rem;
+                padding-top: 1rem;
+            }
         }
     </style>
 </head>
@@ -416,6 +523,7 @@
                     id="username" 
                     class="form-input" 
                     placeholder="Enter your username"
+                    value="demo"
                     required
                     autocomplete="username"
                     autocapitalize="off"
@@ -431,6 +539,7 @@
                     id="password" 
                     class="form-input" 
                     placeholder="Enter your password"
+                    value="demo"
                     required
                     autocomplete="current-password"
                     autocapitalize="off"
@@ -455,6 +564,19 @@
             </button>
         </form>
 
+        <!-- Demo Info -->
+        <div class="demo-info">
+            <div class="demo-title">🚀 Demo Access Ready</div>
+            <div class="demo-credentials">
+                <strong>Demo Credentials Pre-filled</strong><br>
+                Username: <strong>demo</strong> | Password: <strong>demo</strong><br>
+                Click "ACCESS COMMAND CENTER" to login
+            </div>
+            <div class="demo-note">
+                Experience the full AI Sentinel-X cybersecurity platform with all features unlocked
+            </div>
+        </div>
+
         <!-- Security Badge -->
         <div class="security-badge">
             <svg viewBox="0 0 24 24">
@@ -470,7 +592,7 @@
             const matrixRain = document.getElementById('matrixRain');
             const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
             
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const column = document.createElement('div');
                 column.className = 'matrix-column';
                 column.style.left = Math.random() * 100 + '%';
@@ -516,7 +638,7 @@
                 if ((username === 'admin' && password === 'sentinel') || 
                     (username === 'demo' && password === 'demo')) {
                     buttonText.textContent = 'ACCESS GRANTED';
-                    loginButton.style.background = '#00ff88';
+                    loginButton.style.background = 'linear-gradient(135deg, #00ff88 0%, #00cc77 100%)';
                     
                     // Set session storage
                     try {
@@ -542,7 +664,7 @@
                     errorMessage.style.display = 'block';
                     
                     // Clear password field
-                    document.getElementById('password').value = '';
+                    document.getElementById('password').value = 'demo';
                 }
             }, 1500);
             
@@ -581,6 +703,14 @@
                         handleLogin(e);
                     }
                 }
+            });
+
+            // Add visual feedback for pre-filled demo credentials
+            const demoCredentials = document.querySelector('.demo-credentials');
+            demoCredentials.addEventListener('click', function() {
+                document.getElementById('username').value = 'demo';
+                document.getElementById('password').value = 'demo';
+                document.getElementById('username').focus();
             });
         };
     </script>
