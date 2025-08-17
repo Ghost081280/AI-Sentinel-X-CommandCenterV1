@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentinel-X | Agents Management - Super Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #0f0f0f;
+            --accent: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffaa33;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border-color: #2a2a2a;
+            --success: #00ff88;
+            --info: #3388ff;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(51, 136, 255, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(255, 51, 102, 0.02) 0%, transparent 40%);
+            animation: bgShift 30s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        /* Grid Background Pattern */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .stat-badge {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-badge:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-badge-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .stat-badge-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-button:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #00cc70);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-bg);
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.5);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--accent);
+        }
+
+        .sidebar-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+        }
+
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--primary-bg);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-badge.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .sidebar-badge.warning {
+            background: var(--warning);
+            color: var(--primary-bg);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Agent Type Stats */
+        .agent-type-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .agent-type-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+        }
+
+        .agent-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .agent-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-type-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-type-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .agent-type-info {
+            flex: 1;
+        }
+
+        .agent-type-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-type-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .agent-type-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .agent-metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        .agent-status-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        .agent-status-indicator.warning {
+            background: var(--warning);
+            box-shadow: 0 0 10px rgba(255, 170, 51, 0.5);
+        }
+
+        .agent-status-indicator.danger {
+            background: var(--danger);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .filter-select {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* Agent Table */
+        .agent-table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .agent-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .agent-table th {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .agent-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .agent-table tbody tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .agent-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .agent-id {
+            font-family: monospace;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-customer {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .agent-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .agent-status.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-status.warning {
+            background: rgba(255, 170, 51, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 51, 0.3);
+        }
+
+        .agent-status.inactive {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #00cc70;
+            border-color: #00cc70;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1rem 0;
+            }
+            
+            .agent-type-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                display: none;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                AI SENTINEL-X
+            </div>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="agents.html" class="nav-link active">Agents</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+                <a href="threats.html" class="nav-link">Threats</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">28,470</div>
+                            <div class="stat-badge-label">Total Sub-Agents</div>
+                        </div>
+                    </div>
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">2,847</div>
+                            <div class="stat-badge-label">Main Agents</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-button" onclick="toggleUserMenu()">
+                        <div class="user-avatar">SA</div>
+                        <div class="user-info">
+                            <div class="user-name">Super Admin</div>
+                            <div class="user-role">System Administrator</div>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">▼</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <a href="dashboard.html" class="sidebar-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="agents.html" class="sidebar-item active">
+                    <span>🤖</span> Agents
+                    <span class="sidebar-badge">2,847</span>
+                </a>
+                <a href="threats.html" class="sidebar-item">
+                    <span>🛡️</span> Threats
+                    <span class="sidebar-badge danger">47</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Operations</div>
+                <a href="#" class="sidebar-item" onclick="showDeployments()">
+                    <span>🚀</span> Deployments
+                </a>
+                <a href="#" class="sidebar-item" onclick="showMaintenance()">
+                    <span>🔧</span> Maintenance
+                    <span class="sidebar-badge warning">3</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showBackups()">
+                    <span>💾</span> Backups
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Analytics</div>
+                <a href="analytics.html" class="sidebar-item">
+                    <span>⚡</span> Performance
+                </a>
+                <a href="#" class="sidebar-item" onclick="showFinancials()">
+                    <span>💰</span> Financials
+                </a>
+                <a href="reports.html" class="sidebar-item">
+                    <span>📈</span> Reports
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Support</div>
+                <a href="#" class="sidebar-item" onclick="showTickets()">
+                    <span>🎫</span> Tickets
+                    <span class="sidebar-badge">23</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showDocumentation()">
+                    <span>📚</span> Documentation
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <span>🤖</span> Agent Management
+                    </h1>
+                    <p class="page-subtitle">
+                        Global oversight of all AI Sentinel-X agents and sub-agents across 847 customer deployments
+                    </p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn" onclick="showBulkActions()">
+                        <span>⚡</span> Bulk Actions
+                    </button>
+                    <button class="btn btn-primary" onclick="deployNewAgent()">
+                        <span>🚀</span> Deploy Agent
+                    </button>
+                </div>
+            </div>
+
+            <!-- Agent Type Statistics -->
+            <div class="agent-type-stats" id="agentTypeStats">
+                <!-- Agent type cards will be dynamically generated -->
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Status:</label>
+                    <select class="filter-select" onchange="filterAgents('status', this.value)">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="warning">Warning</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Type:</label>
+                    <select class="filter-select" onchange="filterAgents('type', this.value)">
+                        <option value="all">All Types</option>
+                        <option value="main">Main Agents</option>
+                        <option value="threat">ThreatScanner</option>
+                        <option value="network">NetworkMapper</option>
+                        <option value="defense">DefenseOrchestrator</option>
+                        <option value="encryption">EncryptionManager</option>
+                        <option value="deployer">EncryptionDeployer</option>
+                        <option value="certificate">CertificateManager</option>
+                        <option value="analytics">AnalyticsEngine</option>
+                        <option value="log">LogAgent</option>
+                        <option value="compliance">ComplianceMonitor</option>
+                        <option value="vpn">VPNMonitor</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Region:</label>
+                    <select class="filter-select" onchange="filterAgents('region', this.value)">
+                        <option value="all">All Regions</option>
+                        <option value="us-east">US East</option>
+                        <option value="us-west">US West</option>
+                        <option value="eu-west">EU West</option>
+                        <option value="eu-central">EU Central</option>
+                        <option value="ap-south">Asia Pacific South</option>
+                        <option value="ap-northeast">Asia Pacific Northeast</option>
+                    </select>
+                </div>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search agents by ID, customer, or location..." onkeyup="searchAgents(this.value)">
+                </div>
+            </div>
+
+            <!-- Agent Table -->
+            <div class="agent-table-container">
+                <table class="agent-table">
+                    <thead>
+                        <tr>
+                            <th>Agent ID</th>
+                            <th>Type</th>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Last Seen</th>
+                            <th>Performance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentTableBody">
+                        <!-- Agent rows will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <span class="modal-close" onclick="closeModal()">×</span>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agent Types Configuration
+        const agentTypes = [
+            {
+                id: 'main',
+                name: 'Main Agent',
+                icon: '🤖',
+                description: 'Central AI orchestrating all security operations',
+                total: 2847,
+                active: 2483,
+                warning: 317,
+                inactive: 47
+            },
+            {
+                id: 'threat',
+                name: 'ThreatScanner',
+                icon: '🛡️',
+                description: 'Real-time threat detection and analysis',
+                total: 2847,
+                active: 2752,
+                warning: 73,
+                inactive: 22
+            },
+            {
+                id: 'network',
+                name: 'NetworkMapper',
+                icon: '🌐',
+                description: 'Network discovery and asset inventory',
+                total: 2847,
+                active: 2691,
+                warning: 134,
+                inactive: 22
+            },
+            {
+                id: 'defense',
+                name: 'DefenseOrchestrator',
+                icon: '⚔️',
+                description: 'Automated threat response and honeypot management',
+                total: 2847,
+                active: 2715,
+                warning: 108,
+                inactive: 24
+            },
+            {
+                id: 'encryption',
+                name: 'EncryptionManager',
+                icon: '🔐',
+                description: 'Hybrid encryption and key management',
+                total: 2847,
+                active: 2798,
+                warning: 37,
+                inactive: 12
+            },
+            {
+                id: 'deployer',
+                name: 'EncryptionDeployer',
+                icon: '🔧',
+                description: 'Deploys encryption to discovered devices',
+                total: 2847,
+                active: 2671,
+                warning: 152,
+                inactive: 24
+            },
+            {
+                id: 'certificate',
+                name: 'CertificateManager',
+                icon: '📜',
+                description: 'SSL/TLS certificate management and monitoring',
+                total: 2847,
+                active: 2763,
+                warning: 67,
+                inactive: 17
+            },
+            {
+                id: 'analytics',
+                name: 'AnalyticsEngine',
+                icon: '📊',
+                description: 'Security metrics and predictive threat modeling',
+                total: 2847,
+                active: 2781,
+                warning: 54,
+                inactive: 12
+            },
+            {
+                id: 'log',
+                name: 'LogAgent',
+                icon: '📝',
+                description: 'Centralized log collection and analysis',
+                total: 2847,
+                active: 2724,
+                warning: 98,
+                inactive: 25
+            },
+            {
+                id: 'compliance',
+                name: 'ComplianceMonitor',
+                icon: '✅',
+                description: 'Regulatory compliance and audit preparation',
+                total: 2847,
+                active: 2785,
+                warning: 49,
+                inactive: 13
+            },
+            {
+                id: 'vpn',
+                name: 'VPNMonitor',
+                icon: '🔒',
+                description: 'VPN security and geographic anomaly detection',
+                total: 2847,
+                active: 2659,
+                warning: 164,
+                inactive: 24
+            }
+        ];
+
+        // Sample agent data
+        const sampleAgents = [
+            { id: 'SX-001-MAIN', type: 'Main Agent', customer: 'TechCorp Inc', location: 'New York, US', status: 'active', lastSeen: '2 min ago', performance: '99.9%' },
+            { id: 'SX-001-THREAT', type: 'ThreatScanner', customer: 'TechCorp Inc', location: 'New York, US', status: 'active', lastSeen: '1 min ago', performance: '98.7%' },
+            { id: 'SX-001-NET', type: 'NetworkMapper', customer: 'TechCorp Inc', location: 'New York, US', status: 'warning', lastSeen: '5 min ago', performance: '94.2%' },
+            { id: 'SX-002-MAIN', type: 'Main Agent', customer: 'CyberShield LLC', location: 'London, UK', status: 'active', lastSeen: '3 min ago', performance: '99.8%' },
+            { id: 'SX-002-ENC', type: 'EncryptionManager', customer: 'CyberShield LLC', location: 'London, UK', status: 'active', lastSeen: '1 min ago', performance: '100%' },
+            { id: 'SX-003-MAIN', type: 'Main Agent', customer: 'SecureNet AG', location: 'Frankfurt, DE', status: 'warning', lastSeen: '12 min ago', performance: '89.4%' },
+            { id: 'SX-004-VPN', type: 'VPNMonitor', customer: 'DataGuard Corp', location: 'Tokyo, JP', status: 'active', lastSeen: '30 sec ago', performance: '97.8%' },
+            { id: 'SX-005-LOG', type: 'LogAgent', customer: 'InfoSec Solutions', location: 'Sydney, AU', status: 'inactive', lastSeen: '2 hours ago', performance: '0%' }
+        ];
+
+        // Initialize the page
+        function initAgentsPage() {
+            // Check if user is logged in
+            if (!sessionStorage.getItem('loggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            renderAgentTypeStats();
+            renderAgentTable();
+        }
+
+        // Render agent type statistics
+        function renderAgentTypeStats() {
+            const container = document.getElementById('agentTypeStats');
+            container.innerHTML = agentTypes.map(agent => {
+                const healthPercentage = ((agent.active / agent.total) * 100).toFixed(1);
+                const statusIndicator = healthPercentage > 95 ? 'success' : healthPercentage > 85 ? 'warning' : 'danger';
+                
+                return `
+                    <div class="agent-type-card" onclick="viewAgentType('${agent.id}')">
+                        <div class="agent-status-indicator ${healthPercentage > 95 ? '' : healthPercentage > 85 ? 'warning' : 'danger'}"></div>
+                        <div class="agent-type-header">
+                            <div class="agent-type-icon">${agent.icon}</div>
+                            <div class="agent-type-info">
+                                <div class="agent-type-name">${agent.name}</div>
+                                <div class="agent-type-description">${agent.description}</div>
+                            </div>
+                        </div>
+                        <div class="agent-type-metrics">
+                            <div class="agent-metric">
+                                <div class="metric-value">${agent.total}</div>
+                                <div class="metric-label">Total</div>
+                            </div>
+                            <div class="agent-metric">
+                                <div class="metric-value">${agent.active}</div>
+                                <div class="metric-label">Active</div>
+                            </div>
+                            <div class="agent-metric">
+                                <div class="metric-value">${healthPercentage}%</div>
+                                <div class="metric-label">Health</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render agent table
+        function renderAgentTable() {
+            const tbody = document.getElementById('agentTableBody');
+            tbody.innerHTML = sampleAgents.map(agent => `
+                <tr onclick="viewAgentDetails('${agent.id}')">
+                    <td>
+                        <div class="agent-id">${agent.id}</div>
+                    </td>
+                    <td>
+                        <div class="agent-name">${agent.type}</div>
+                    </td>
+                    <td>
+                        <div class="agent-name">${agent.customer}</div>
+                        <div class="agent-customer">Customer ID: ${agent.id.split('-')[0] + '-' + agent.id.split('-')[1]}</div>
+                    </td>
+                    <td>${agent.location}</td>
+                    <td>
+                        <span class="agent-status ${agent.status}">
+                            <span class="status-dot"></span>
+                            ${agent.status}
+                        </span>
+                    </td>
+                    <td>${agent.lastSeen}</td>
+                    <td>${agent.performance}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); viewAgentDetails('${agent.id}')">View</button>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); restartAgent('${agent.id}')">Restart</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter functions
+        function filterAgents(type, value) {
+            console.log(`Filtering by ${type}: ${value}`);
+            // In a real implementation, this would filter the table
+        }
+
+        function searchAgents(query) {
+            console.log(`Searching for: ${query}`);
+            // In a real implementation, this would search the table
+        }
+
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Agent actions
+        function viewAgentType(typeId) {
+            const agentType = agentTypes.find(type => type.id === typeId);
+            showModal(`${agentType.icon} ${agentType.name} Overview`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 0.5rem;">Description</h3>
+                        <p style="color: var(--text-secondary);">${agentType.description}</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">${agentType.total}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Total Deployed</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--success); margin-bottom: 0.5rem;">${agentType.active}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Active</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--warning); margin-bottom: 0.5rem;">${agentType.warning}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Warning</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--danger); margin-bottom: 0.5rem;">${agentType.inactive}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Inactive</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        <button class="btn" onclick="showAgentTypeDetails('${typeId}')">View All ${agentType.name}s</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function viewAgentDetails(agentId) {
+            const agent = sampleAgents.find(a => a.id === agentId);
+            if (!agent) return;
+
+            showModal(`🔍 Agent Details: ${agentId}`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <strong>Type:</strong> ${agent.type}
+                            </div>
+                            <div>
+                                <strong>Customer:</strong> ${agent.customer}
+                            </div>
+                            <div>
+                                <strong>Location:</strong> ${agent.location}
+                            </div>
+                            <div>
+                                <strong>Status:</strong> 
+                                <span class="agent-status ${agent.status}">
+                                    <span class="status-dot"></span>
+                                    ${agent.status}
+                                </span>
+                            </div>
+                            <div>
+                                <strong>Last Seen:</strong> ${agent.lastSeen}
+                            </div>
+                            <div>
+                                <strong>Performance:</strong> ${agent.performance}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 1rem;">Recent Activity</h3>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <div style="padding: 0.5rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ✓ Health check completed - 2 min ago
+                            </div>
+                            <div style="padding: 0.5rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ✓ Configuration updated - 15 min ago
+                            </div>
+                            <div style="padding: 0.5rem; background: rgba(255, 170, 51, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ⚠ Memory usage spike detected - 1 hour ago
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        <button class="btn" onclick="restartAgent('${agentId}')">Restart Agent</button>
+                        <button class="btn" onclick="viewAgentLogs('${agentId}')">View Logs</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function restartAgent(agentId) {
+            if (confirm(`Are you sure you want to restart agent ${agentId}?`)) {
+                showNotification('✓ Agent restart initiated successfully', 'success');
+                closeModal();
+            }
+        }
+
+        function deployNewAgent() {
+            showModal('🚀 Deploy New Agent', `
+                <form onsubmit="event.preventDefault(); submitNewAgentDeployment();">
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Customer</label>
+                            <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);" required>
+                                <option value="">Select customer...</option>
+                                <option value="new">New Customer</option>
+                                <option value="techcorp">TechCorp Inc</option>
+                                <option value="cybershield">CyberShield LLC</option>
+                                <option value="securenet">SecureNet AG</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Deployment Region</label>
+                            <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);" required>
+                                <option value="">Select region...</option>
+                                <option value="us-east">US East (Virginia)</option>
+                                <option value="us-west">US West (Oregon)</option>
+                                <option value="eu-west">EU West (Ireland)</option>
+                                <option value="eu-central">EU Central (Frankfurt)</option>
+                                <option value="ap-south">Asia Pacific (Singapore)</option>
+                                <option value="ap-northeast">Asia Pacific (Tokyo)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Agent Configuration</label>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Deploy Main Agent
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Deploy All Sub-Agents
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox"> Custom Configuration
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Deploy Agents</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function submitNewAgentDeployment() {
+            closeModal();
+            showNotification('🚀 Agent deployment initiated successfully!', 'success');
+        }
+
+        function showBulkActions() {
+            showModal('⚡ Bulk Actions', `
+                <div style="display: grid; gap: 1rem;">
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkRestart()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🔄</span>
+                        Restart All Agents
+                    </button>
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkUpdate()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">⬆️</span>
+                        Mass Update
+                    </button>
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkHealthCheck()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🏥</span>
+                        Health Check All
+                    </button>
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="generateAgentReport()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
+                        Generate Report
+                    </button>
+                </div>
+            `);
+        }
+
+        // Bulk action functions
+        function bulkRestart() {
+            if (confirm('This will restart ALL agents across all customers. Are you sure?')) {
+                closeModal();
+                showNotification('⚡ Bulk restart initiated for all agents', 'success');
+            }
+        }
+
+        function bulkUpdate() {
+            closeModal();
+            // Would open the same mass update modal from dashboard
+            showNotification('📦 Bulk update process started', 'success');
+        }
+
+        function bulkHealthCheck() {
+            closeModal();
+            showNotification('🏥 Health check initiated for all agents', 'success');
+        }
+
+        function generateAgentReport() {
+            closeModal();
+            showNotification('📊 Agent report generation started', 'success');
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--info)'};
+                color: var(--primary-bg);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        function toggleUserMenu() {
+            // Would implement user menu toggle
+        }
+
+        // Sidebar navigation functions
+        function showDeployments() { alert('Deployments view coming soon...'); }
+        function showMaintenance() { alert('Maintenance view coming soon...'); }
+        function showBackups() { alert('Backups view coming soon...'); }
+        function showFinancials() { alert('Financials view coming soon...'); }
+        function showTickets() { alert('Tickets view coming soon...'); }
+        function showDocumentation() { alert('Documentation coming soon...'); }
+
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize on load
+        window.onload = initAgentsPage;
+    </script>
+</body>
+</html>
