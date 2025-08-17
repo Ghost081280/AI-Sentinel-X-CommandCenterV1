@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Sentinel-X | Super Admin Command Center</title>
+    <title>AI Sentinel-X | Agents Management - Super Admin</title>
     <style>
         * {
             margin: 0;
@@ -91,7 +91,7 @@
             background-size: 50px 50px;
         }
 
-        /* Header - Improved */
+        /* Header */
         .header {
             background: rgba(15, 15, 15, 0.95);
             backdrop-filter: blur(20px);
@@ -130,12 +130,6 @@
         @keyframes pulse {
             0%, 100% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.05); filter: brightness(1.2); }
-        }
-
-        .header-center {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
         }
 
         .nav-links {
@@ -220,7 +214,7 @@
             color: var(--text-secondary);
         }
 
-        /* User Menu - Improved */
+        /* User Menu */
         .user-menu {
             position: relative;
         }
@@ -283,6 +277,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             overflow: hidden;
             animation: dropdownSlide 0.3s ease;
+            z-index: 2000;
         }
 
         @keyframes dropdownSlide {
@@ -442,24 +437,44 @@
             overflow-y: auto;
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Agent Type Stats */
+        .agent-type-stats {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        /* Quick Stats Cards */
-        .quick-stats {
-            grid-column: span 12;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
+        .agent-type-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -468,9 +483,10 @@
             overflow: hidden;
             transition: all 0.3s ease;
             box-shadow: var(--card-shadow);
+            cursor: pointer;
         }
 
-        .stat-card::before {
+        .agent-type-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -486,20 +502,20 @@
             100% { transform: translateX(100%); }
         }
 
-        .stat-card:hover {
+        .agent-type-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--hover-shadow);
             border-color: rgba(0, 255, 136, 0.3);
         }
 
-        .stat-card-header {
+        .agent-type-header {
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .stat-card-icon {
+        .agent-type-icon {
             width: 48px;
             height: 48px;
             background: rgba(0, 255, 136, 0.1);
@@ -510,258 +526,204 @@
             font-size: 1.5rem;
         }
 
-        .stat-card-change {
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        .agent-type-info {
+            flex: 1;
         }
 
-        .stat-card-change.positive {
-            color: var(--success);
+        .agent-type-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
         }
 
-        .stat-card-change.negative {
-            color: var(--danger);
-        }
-
-        .stat-card h3 {
+        .agent-type-description {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+        }
+
+        .agent-type-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .agent-metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-top: 0.25rem;
         }
 
-        .stat-value {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            line-height: 1;
-        }
-
-        .stat-value.accent {
-            color: var(--accent);
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-        }
-
-        .stat-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .stat-chart {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 120px;
-            height: 60px;
-            opacity: 0.1;
-        }
-
-        /* Full Width Cards */
-        .card-full {
-            grid-column: span 12;
-        }
-
-        .card-half {
-            grid-column: span 6;
-        }
-
-        .card-third {
-            grid-column: span 4;
-        }
-
-        .card-two-thirds {
-            grid-column: span 8;
-        }
-
-        /* Card Styles */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: var(--hover-shadow);
-            border-color: rgba(0, 255, 136, 0.2);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* World Map */
-        .world-map-container {
-            position: relative;
-            height: 500px;
-            background: 
-                radial-gradient(ellipse at center, rgba(0, 255, 136, 0.05) 0%, transparent 70%),
-                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwMCA1MDBMNDAwIDIwMEw3MDAgMzAwTDEwMDAgMTAwIiBzdHJva2U9IiMyYTJhMmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8Y2lyY2xlIGN4PSI0MDAiIGN5PSIyMDAiIHI9IjEwIiBmaWxsPSIjMmEyYTJhIi8+CjxjaXJjbGUgY3g9IjcwMCIgY3k9IjMwMCIgcj0iMTAiIGZpbGw9IiMyYTJhMmEiLz4KPGNpcmNsZSBjeD0iMTAwMCIgY3k9IjEwMCIgcj0iMTAiIGZpbGw9IiMyYTJhMmEiLz4KPC9zdmc+') center/cover no-repeat;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .map-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 10, 10, 0.4) 100%);
-            pointer-events: none;
-        }
-
-        .map-controls {
+        .agent-status-indicator {
             position: absolute;
             top: 1rem;
             right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        .agent-status-indicator.warning {
+            background: var(--warning);
+            box-shadow: 0 0 10px rgba(255, 170, 51, 0.5);
+        }
+
+        .agent-status-indicator.danger {
+            background: var(--danger);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Filters */
+        .filters {
             display: flex;
-            gap: 0.5rem;
-            background: rgba(15, 15, 15, 0.9);
-            padding: 0.5rem;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .map-control-btn {
-            background: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .map-control-btn:hover {
-            background: rgba(0, 255, 136, 0.1);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .map-control-btn.active {
-            background: var(--accent);
-            color: var(--primary-bg);
-            border-color: var(--accent);
-        }
-
-        .map-stats-overlay {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            backdrop-filter: blur(10px);
-            display: flex;
-            gap: 2rem;
-        }
-
-        .map-stat {
+        .filter-group {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .map-stat-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+        .filter-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
-        .map-stat-label {
-            font-size: 0.85rem;
+        .filter-select {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--text-secondary);
         }
 
-        .map-stat-value {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-left: 0.25rem;
-        }
-
-        /* Agent Grid */
-        .agent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .agent-card {
-            background: var(--secondary-bg);
+        /* Agent Table */
+        .agent-table-container {
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: var(--card-shadow);
         }
 
-        .agent-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .agent-table {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-            transition: left 0.6s ease;
+            border-collapse: collapse;
         }
 
-        .agent-card:hover::after {
-            left: 100%;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border-color: rgba(0, 255, 136, 0.3);
-        }
-
-        .agent-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .agent-id {
+        .agent-table th {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            text-align: left;
             font-weight: 600;
-            color: var(--accent);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .agent-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .agent-table tbody tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .agent-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
             font-size: 0.9rem;
         }
 
+        .agent-id {
+            font-family: monospace;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-customer {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
         .agent-status {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.25rem 0.75rem;
@@ -796,220 +758,7 @@
             animation: blink 2s ease-in-out infinite;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .agent-info {
-            margin-bottom: 1rem;
-        }
-
-        .agent-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .agent-location {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .agent-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .agent-metric {
-            text-align: center;
-        }
-
-        .metric-value {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 0.25rem;
-        }
-
-        /* Live Activity Feed */
-        .activity-feed {
-            height: 400px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-
-        .activity-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--secondary-bg);
-            border-radius: 10px;
-            margin-bottom: 0.75rem;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .activity-item:hover {
-            transform: translateX(4px);
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .activity-item.success {
-            border-left-color: var(--success);
-        }
-
-        .activity-item.warning {
-            border-left-color: var(--warning);
-        }
-
-        .activity-item.danger {
-            border-left-color: var(--danger);
-        }
-
-        .activity-item.info {
-            border-left-color: var(--info);
-        }
-
-        .activity-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 1rem;
-        }
-
-        .activity-icon.success {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--success);
-        }
-
-        .activity-icon.warning {
-            background: rgba(255, 170, 51, 0.1);
-            color: var(--warning);
-        }
-
-        .activity-icon.danger {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-        }
-
-        .activity-icon.info {
-            background: rgba(51, 136, 255, 0.1);
-            color: var(--info);
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-message {
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-time {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        /* Performance Chart */
-        .performance-chart {
-            height: 300px;
-            position: relative;
-            padding: 1rem;
-        }
-
-        .chart-grid {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            right: 1rem;
-            bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .chart-line {
-            height: 1px;
-            background: var(--border-color);
-            position: relative;
-        }
-
-        .chart-label {
-            position: absolute;
-            left: -40px;
-            top: -8px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        /* Table Styles */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .data-table th {
-            background: var(--secondary-bg);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .data-table tr {
-            transition: all 0.3s ease;
-        }
-
-        .data-table tbody tr:hover {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .data-table td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
-            font-size: 0.9rem;
-        }
-
-        /* Button Styles */
+        /* Buttons */
         .btn {
             background: transparent;
             border: 1px solid var(--border-color);
@@ -1023,6 +772,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
 
         .btn:hover {
@@ -1045,31 +795,9 @@
             box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
         }
 
-        .btn-danger {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-
-        .btn-danger:hover {
-            background: var(--danger);
-            border-color: var(--danger);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 51, 102, 0.3);
-        }
-
         .btn-sm {
             padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
         }
 
         /* Modal */
@@ -1096,7 +824,7 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 800px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -1149,7 +877,7 @@
 
         /* Form Styles */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-label {
@@ -1179,54 +907,7 @@
             box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
         }
 
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            background: var(--accent);
-            color: var(--primary-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(0, 255, 136, 0.6);
-        }
-
-        /* Animations */
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateX(-100%);
-            }
-        }
-
         /* Responsive */
-        @media (max-width: 1400px) {
-            .card-half {
-                grid-column: span 12;
-            }
-            
-            .card-third {
-                grid-column: span 6;
-            }
-            
-            .card-two-thirds {
-                grid-column: span 12;
-            }
-        }
-
         @media (max-width: 1200px) {
             .sidebar {
                 width: 240px;
@@ -1251,11 +932,7 @@
                 padding: 1rem 0;
             }
             
-            .card-third {
-                grid-column: span 12;
-            }
-            
-            .agent-grid {
+            .agent-type-stats {
                 grid-template-columns: 1fr;
             }
         }
@@ -1265,8 +942,13 @@
                 display: none;
             }
             
-            .quick-stats {
-                grid-template-columns: 1fr;
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: none;
             }
         }
     </style>
@@ -1284,8 +966,8 @@
             </div>
             
             <nav class="nav-links">
-                <a href="dashboard.html" class="nav-link active">Dashboard</a>
-                <a href="agents.html" class="nav-link">Agents</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="agents.html" class="nav-link active">Agents</a>
                 <a href="analytics.html" class="nav-link">Analytics</a>
                 <a href="threats.html" class="nav-link">Threats</a>
                 <a href="reports.html" class="nav-link">Reports</a>
@@ -1296,13 +978,13 @@
                     <div class="stat-badge">
                         <div>
                             <div class="stat-badge-value">2,847</div>
-                            <div class="stat-badge-label">Global Agents</div>
+                            <div class="stat-badge-label">Total Agents</div>
                         </div>
                     </div>
                     <div class="stat-badge">
                         <div>
-                            <div class="stat-badge-value">$487K</div>
-                            <div class="stat-badge-label">MRR</div>
+                            <div class="stat-badge-value">2,483</div>
+                            <div class="stat-badge-label">Active Now</div>
                         </div>
                     </div>
                 </div>
@@ -1355,11 +1037,10 @@
         <aside class="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-title">Main</div>
-                <a href="dashboard.html" class="sidebar-item active">
+                <a href="dashboard.html" class="sidebar-item">
                     <span>📊</span> Dashboard
-                    <span class="sidebar-badge">Live</span>
                 </a>
-                <a href="agents.html" class="sidebar-item">
+                <a href="agents.html" class="sidebar-item active">
                     <span>🤖</span> Agents
                     <span class="sidebar-badge">2,847</span>
                 </a>
@@ -1410,179 +1091,102 @@
 
         <!-- Content Area -->
         <main class="content">
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-icon">🤖</div>
-                        <div class="stat-card-change positive">
-                            <span>↑</span> 12%
-                        </div>
-                    </div>
-                    <h3>Active Agents</h3>
-                    <div class="stat-value accent">2,483</div>
-                    <div class="stat-subtitle">87.3% of total fleet</div>
-                    <canvas class="stat-chart" id="activeChart"></canvas>
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <span>🤖</span> Agent Management
+                    </h1>
+                    <p class="page-subtitle">
+                        Global oversight of all AI Sentinel-X agents and sub-agents across 847 customer deployments
+                    </p>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-icon">🛡️</div>
-                        <div class="stat-card-change positive">
-                            <span>↑</span> 23%
-                        </div>
-                    </div>
-                    <h3>Threats Blocked</h3>
-                    <div class="stat-value">14.2M</div>
-                    <div class="stat-subtitle">Today's total</div>
-                    <canvas class="stat-chart" id="threatsChart"></canvas>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-icon">💚</div>
-                        <div class="stat-card-change positive">
-                            <span>→</span> 0%
-                        </div>
-                    </div>
-                    <h3>System Health</h3>
-                    <div class="stat-value">99.98%</div>
-                    <div class="stat-subtitle">All systems operational</div>
-                    <canvas class="stat-chart" id="healthChart"></canvas>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-icon">💰</div>
-                        <div class="stat-card-change positive">
-                            <span>↑</span> 18%
-                        </div>
-                    </div>
-                    <h3>Monthly Revenue</h3>
-                    <div class="stat-value">$487K</div>
-                    <div class="stat-subtitle">847 active customers</div>
-                    <canvas class="stat-chart" id="revenueChart"></canvas>
+                <div class="page-actions">
+                    <button class="btn" onclick="showBulkActions()">
+                        <span>⚡</span> Bulk Actions
+                    </button>
+                    <button class="btn btn-primary" onclick="deployNewAgent()">
+                        <span>🚀</span> Deploy Agent
+                    </button>
                 </div>
             </div>
 
-            <!-- Dashboard Grid -->
-            <div class="dashboard-grid">
-                <!-- World Map -->
-                <div class="card card-two-thirds">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>🌍</span> Global Agent Distribution
-                        </h2>
-                        <div class="card-actions">
-                            <div class="map-controls" style="position: static; background: none; padding: 0;">
-                                <button class="map-control-btn active" onclick="filterMap('all')">All</button>
-                                <button class="map-control-btn" onclick="filterMap('active')">Active</button>
-                                <button class="map-control-btn" onclick="filterMap('warning')">Warnings</button>
-                                <button class="map-control-btn" onclick="filterMap('inactive')">Inactive</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="world-map-container" id="worldMap">
-                        <div class="map-overlay"></div>
-                        <div class="map-stats-overlay">
-                            <div class="map-stat">
-                                <div class="map-stat-dot" style="background: var(--success);"></div>
-                                <span class="map-stat-label">Active:</span>
-                                <span class="map-stat-value">2,483</span>
-                            </div>
-                            <div class="map-stat">
-                                <div class="map-stat-dot" style="background: var(--warning);"></div>
-                                <span class="map-stat-label">Warning:</span>
-                                <span class="map-stat-value">317</span>
-                            </div>
-                            <div class="map-stat">
-                                <div class="map-stat-dot" style="background: var(--danger);"></div>
-                                <span class="map-stat-label">Inactive:</span>
-                                <span class="map-stat-value">47</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Agent Type Statistics -->
+            <div class="agent-type-stats" id="agentTypeStats">
+                <!-- Agent type cards will be dynamically generated -->
+            </div>
 
-                <!-- Live Activity -->
-                <div class="card card-third">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>⚡</span> Live Activity
-                        </h2>
-                        <button class="btn btn-sm">View All</button>
-                    </div>
-                    <div class="activity-feed" id="activityFeed">
-                        <!-- Activity items will be dynamically generated -->
-                    </div>
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Status:</label>
+                    <select class="filter-select" onchange="filterAgents('status', this.value)">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="warning">Warning</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Type:</label>
+                    <select class="filter-select" onchange="filterAgents('type', this.value)">
+                        <option value="all">All Types</option>
+                        <option value="main">Main Agents</option>
+                        <option value="threat">ThreatScanner</option>
+                        <option value="network">NetworkMapper</option>
+                        <option value="defense">DefenseOrchestrator</option>
+                        <option value="encryption">EncryptionManager</option>
+                        <option value="deployer">EncryptionDeployer</option>
+                        <option value="certificate">CertificateManager</option>
+                        <option value="analytics">AnalyticsEngine</option>
+                        <option value="log">LogAgent</option>
+                        <option value="compliance">ComplianceMonitor</option>
+                        <option value="vpn">VPNMonitor</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Region:</label>
+                    <select class="filter-select" onchange="filterAgents('region', this.value)">
+                        <option value="all">All Regions</option>
+                        <option value="us-east">US East</option>
+                        <option value="us-west">US West</option>
+                        <option value="eu-west">EU West</option>
+                        <option value="eu-central">EU Central</option>
+                        <option value="ap-south">Asia Pacific South</option>
+                        <option value="ap-northeast">Asia Pacific Northeast</option>
+                    </select>
+                </div>
+                
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search agents by ID, customer, or location..." onkeyup="searchAgents(this.value)">
+                </div>
+            </div>
 
-                <!-- Top Agents -->
-                <div class="card card-half">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>🏆</span> Top Performing Agents
-                        </h2>
-                        <button class="btn btn-sm" onclick="window.location.href='agents.html'">View All</button>
-                    </div>
-                    <div class="agent-grid">
-                        <!-- Agent cards will be dynamically generated -->
-                    </div>
-                </div>
-
-                <!-- System Performance -->
-                <div class="card card-half">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>📈</span> System Performance
-                        </h2>
-                        <select class="form-select" style="width: auto;">
-                            <option>Last 24 Hours</option>
-                            <option>Last 7 Days</option>
-                            <option>Last 30 Days</option>
-                        </select>
-                    </div>
-                    <div class="performance-chart">
-                        <div class="chart-grid">
-                            <div class="chart-line"><span class="chart-label">100%</span></div>
-                            <div class="chart-line"><span class="chart-label">75%</span></div>
-                            <div class="chart-line"><span class="chart-label">50%</span></div>
-                            <div class="chart-line"><span class="chart-label">25%</span></div>
-                            <div class="chart-line"><span class="chart-label">0%</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Critical Alerts -->
-                <div class="card card-full">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>🚨</span> Critical Alerts
-                        </h2>
-                        <button class="btn btn-sm" onclick="clearAllAlerts()">Clear All</button>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Agent</th>
-                                <th>Location</th>
-                                <th>Message</th>
-                                <th>Time</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alertsTable">
-                            <!-- Alert rows will be dynamically generated -->
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Agent Table -->
+            <div class="agent-table-container">
+                <table class="agent-table">
+                    <thead>
+                        <tr>
+                            <th>Agent ID</th>
+                            <th>Type</th>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Last Seen</th>
+                            <th>Performance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentTableBody">
+                        <!-- Agent rows will be dynamically generated -->
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>
-
-    <!-- Floating Action Button -->
-    <div class="fab" onclick="openCommandCenter()">⚡</div>
 
     <!-- Modal -->
     <div class="modal" id="modal">
@@ -1598,24 +1202,158 @@
     </div>
 
     <script>
-        // Initialize dashboard
-        function initDashboard() {
+        // Global platform data - consistent across all pages
+        const PLATFORM_DATA = {
+            totalAgents: 2847,
+            activeAgents: 2483,
+            warningAgents: 317,
+            inactiveAgents: 47,
+            threatsBlocked: 14200000,
+            activeThreatIncidents: 47,
+            customers: 847,
+            monthlyRevenue: 487000,
+            systemHealth: 99.98,
+            reportCount: 1247,
+            activeSchedules: 23,
+            supportTickets: 23
+        };
+
+        // Agent Types Configuration
+        const agentTypes = [
+            {
+                id: 'main',
+                name: 'Main Agent',
+                icon: '🤖',
+                description: 'Central AI orchestrating all security operations',
+                total: 847,
+                active: 729,
+                warning: 95,
+                inactive: 23
+            },
+            {
+                id: 'threat',
+                name: 'ThreatScanner',
+                icon: '🛡️',
+                description: 'Real-time threat detection and analysis',
+                total: 847,
+                active: 821,
+                warning: 21,
+                inactive: 5
+            },
+            {
+                id: 'network',
+                name: 'NetworkMapper',
+                icon: '🌐',
+                description: 'Network discovery and asset inventory',
+                total: 847,
+                active: 803,
+                warning: 40,
+                inactive: 4
+            },
+            {
+                id: 'defense',
+                name: 'DefenseOrchestrator',
+                icon: '⚔️',
+                description: 'Automated threat response and honeypot management',
+                total: 847,
+                active: 810,
+                warning: 32,
+                inactive: 5
+            },
+            {
+                id: 'encryption',
+                name: 'EncryptionManager',
+                icon: '🔐',
+                description: 'Hybrid encryption and key management',
+                total: 847,
+                active: 835,
+                warning: 11,
+                inactive: 1
+            },
+            {
+                id: 'deployer',
+                name: 'EncryptionDeployer',
+                icon: '🔧',
+                description: 'Deploys encryption to discovered devices',
+                total: 847,
+                active: 798,
+                warning: 45,
+                inactive: 4
+            },
+            {
+                id: 'certificate',
+                name: 'CertificateManager',
+                icon: '📜',
+                description: 'SSL/TLS certificate management and monitoring',
+                total: 847,
+                active: 825,
+                warning: 20,
+                inactive: 2
+            },
+            {
+                id: 'analytics',
+                name: 'AnalyticsEngine',
+                icon: '📊',
+                description: 'Security metrics and predictive threat modeling',
+                total: 847,
+                active: 831,
+                warning: 15,
+                inactive: 1
+            },
+            {
+                id: 'log',
+                name: 'LogAgent',
+                icon: '📝',
+                description: 'Centralized log collection and analysis',
+                total: 847,
+                active: 813,
+                warning: 29,
+                inactive: 5
+            },
+            {
+                id: 'compliance',
+                name: 'ComplianceMonitor',
+                icon: '✅',
+                description: 'Regulatory compliance and audit preparation',
+                total: 847,
+                active: 832,
+                warning: 14,
+                inactive: 1
+            },
+            {
+                id: 'vpn',
+                name: 'VPNMonitor',
+                icon: '🔒',
+                description: 'VPN security and geographic anomaly detection',
+                total: 847,
+                active: 795,
+                warning: 49,
+                inactive: 3
+            }
+        ];
+
+        // Sample agent data
+        const sampleAgents = [
+            { id: 'SX-001-MAIN', type: 'Main Agent', customer: 'TechCorp Inc', location: 'New York, US', status: 'active', lastSeen: '2 min ago', performance: '99.9%' },
+            { id: 'SX-001-THREAT', type: 'ThreatScanner', customer: 'TechCorp Inc', location: 'New York, US', status: 'active', lastSeen: '1 min ago', performance: '98.7%' },
+            { id: 'SX-001-NET', type: 'NetworkMapper', customer: 'TechCorp Inc', location: 'New York, US', status: 'warning', lastSeen: '5 min ago', performance: '94.2%' },
+            { id: 'SX-002-MAIN', type: 'Main Agent', customer: 'CyberShield LLC', location: 'London, UK', status: 'active', lastSeen: '3 min ago', performance: '99.8%' },
+            { id: 'SX-002-ENC', type: 'EncryptionManager', customer: 'CyberShield LLC', location: 'London, UK', status: 'active', lastSeen: '1 min ago', performance: '100%' },
+            { id: 'SX-003-MAIN', type: 'Main Agent', customer: 'SecureNet AG', location: 'Frankfurt, DE', status: 'warning', lastSeen: '12 min ago', performance: '89.4%' },
+            { id: 'SX-004-VPN', type: 'VPNMonitor', customer: 'DataGuard Corp', location: 'Tokyo, JP', status: 'active', lastSeen: '30 sec ago', performance: '97.8%' },
+            { id: 'SX-005-LOG', type: 'LogAgent', customer: 'InfoSec Solutions', location: 'Sydney, AU', status: 'inactive', lastSeen: '2 hours ago', performance: '0%' }
+        ];
+
+        // Initialize the page
+        function initAgentsPage() {
             // Check if user is logged in
             if (!sessionStorage.getItem('loggedIn')) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Mark as logged in
-            sessionStorage.setItem('loggedIn', 'true');
-            sessionStorage.setItem('lastActivity', new Date().toISOString());
-
-            // Initialize components
-            renderActivityFeed();
-            renderAgentCards();
-            renderAlerts();
-            startLiveUpdates();
-            initCharts();
+            renderAgentTypeStats();
+            renderAgentTable();
         }
 
         // User menu toggle
@@ -1638,126 +1376,88 @@
             sessionStorage.removeItem('lastActivity');
         }
 
-        // Activity Feed
-        const activities = [
-            { type: 'success', icon: '✓', message: 'Agent SX-001 successfully updated', time: 'Just now' },
-            { type: 'warning', icon: '⚠', message: 'High CPU usage detected on SX-003', time: '2 min ago' },
-            { type: 'danger', icon: '✕', message: 'Failed login attempt for SX-005', time: '5 min ago' },
-            { type: 'info', icon: 'ℹ', message: 'Scheduled maintenance completed', time: '10 min ago' },
-            { type: 'success', icon: '✓', message: 'Backup process completed', time: '15 min ago' },
-            { type: 'warning', icon: '⚠', message: 'Certificate expiring soon for SX-007', time: '20 min ago' }
-        ];
-
-        function renderActivityFeed() {
-            const feed = document.getElementById('activityFeed');
-            feed.innerHTML = activities.map((activity, index) => `
-                <div class="activity-item ${activity.type}" style="animation-delay: ${index * 0.1}s">
-                    <div class="activity-icon ${activity.type}">${activity.icon}</div>
-                    <div class="activity-content">
-                        <div class="activity-message">${activity.message}</div>
-                        <div class="activity-time">${activity.time}</div>
+        // Render agent type statistics
+        function renderAgentTypeStats() {
+            const container = document.getElementById('agentTypeStats');
+            container.innerHTML = agentTypes.map(agent => {
+                const healthPercentage = ((agent.active / agent.total) * 100).toFixed(1);
+                const statusIndicator = healthPercentage > 95 ? 'success' : healthPercentage > 85 ? 'warning' : 'danger';
+                
+                return `
+                    <div class="agent-type-card" onclick="viewAgentType('${agent.id}')">
+                        <div class="agent-status-indicator ${healthPercentage > 95 ? '' : healthPercentage > 85 ? 'warning' : 'danger'}"></div>
+                        <div class="agent-type-header">
+                            <div class="agent-type-icon">${agent.icon}</div>
+                            <div class="agent-type-info">
+                                <div class="agent-type-name">${agent.name}</div>
+                                <div class="agent-type-description">${agent.description}</div>
+                            </div>
+                        </div>
+                        <div class="agent-type-metrics">
+                            <div class="agent-metric">
+                                <div class="metric-value">${agent.total}</div>
+                                <div class="metric-label">Total</div>
+                            </div>
+                            <div class="agent-metric">
+                                <div class="metric-value">${agent.active}</div>
+                                <div class="metric-label">Active</div>
+                            </div>
+                            <div class="agent-metric">
+                                <div class="metric-value">${healthPercentage}%</div>
+                                <div class="metric-label">Health</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Agent Cards
-        const topAgents = [
-            { id: 'SX-001', name: 'TechCorp Inc', location: 'New York, US', status: 'active', threats: '12.4K', cpu: '23%', uptime: '99.9%' },
-            { id: 'SX-002', name: 'CyberShield LLC', location: 'London, UK', status: 'active', threats: '8.7K', cpu: '18%', uptime: '99.8%' },
-            { id: 'SX-007', name: 'NetDefender', location: 'Singapore, SG', status: 'active', threats: '11.2K', cpu: '31%', uptime: '99.7%' }
-        ];
-
-        function renderAgentCards() {
-            const container = document.querySelector('.agent-grid');
-            container.innerHTML = topAgents.map(agent => `
-                <div class="agent-card" onclick="viewAgent('${agent.id}')">
-                    <div class="agent-header">
-                        <span class="agent-id">${agent.id}</span>
+        // Render agent table
+        function renderAgentTable() {
+            const tbody = document.getElementById('agentTableBody');
+            tbody.innerHTML = sampleAgents.map(agent => `
+                <tr onclick="viewAgentDetails('${agent.id}')">
+                    <td>
+                        <div class="agent-id">${agent.id}</div>
+                    </td>
+                    <td>
+                        <div class="agent-name">${agent.type}</div>
+                    </td>
+                    <td>
+                        <div class="agent-name">${agent.customer}</div>
+                        <div class="agent-customer">Customer ID: ${agent.id.split('-')[0] + '-' + agent.id.split('-')[1]}</div>
+                    </td>
+                    <td>${agent.location}</td>
+                    <td>
                         <span class="agent-status ${agent.status}">
                             <span class="status-dot"></span>
                             ${agent.status}
                         </span>
-                    </div>
-                    <div class="agent-info">
-                        <div class="agent-name">${agent.name}</div>
-                        <div class="agent-location">📍 ${agent.location}</div>
-                    </div>
-                    <div class="agent-metrics">
-                        <div class="agent-metric">
-                            <div class="metric-value">${agent.threats}</div>
-                            <div class="metric-label">Threats/Hr</div>
-                        </div>
-                        <div class="agent-metric">
-                            <div class="metric-value">${agent.cpu}</div>
-                            <div class="metric-label">CPU Usage</div>
-                        </div>
-                        <div class="agent-metric">
-                            <div class="metric-value">${agent.uptime}</div>
-                            <div class="metric-label">Uptime</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Alerts Table
-        const alerts = [
-            { type: 'danger', agent: 'SX-005', location: 'Berlin, DE', message: 'Agent offline for 2 hours', time: '2 min ago' },
-            { type: 'warning', agent: 'SX-003', location: 'Tokyo, JP', message: 'DDoS attack detected', time: '15 min ago' },
-            { type: 'danger', agent: 'SX-008', location: 'Dubai, AE', message: 'Critical security breach attempt', time: '1 hour ago' }
-        ];
-
-        function renderAlerts() {
-            const tbody = document.getElementById('alertsTable');
-            tbody.innerHTML = alerts.map(alert => `
-                <tr>
-                    <td><span class="agent-status ${alert.type}"><span class="status-dot"></span> ${alert.type}</span></td>
-                    <td><strong>${alert.agent}</strong></td>
-                    <td>${alert.location}</td>
-                    <td>${alert.message}</td>
-                    <td>${alert.time}</td>
+                    </td>
+                    <td>${agent.lastSeen}</td>
+                    <td>${agent.performance}</td>
                     <td>
-                        <button class="btn btn-sm" onclick="viewAlert('${alert.agent}')">View</button>
-                        <button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); viewAgentDetails('${agent.id}')">View</button>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); restartAgent('${agent.id}')">Restart</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // Initialize Charts (placeholder)
-        function initCharts() {
-            // In a real implementation, you would use Chart.js or similar
-            console.log('Charts initialized');
+        // Filter functions
+        function filterAgents(type, value) {
+            console.log(`Filtering by ${type}: ${value}`);
+            showNotification(`🔍 Filtering agents by ${type}: ${value}`, 'info');
         }
 
-        // Live Updates
-        function startLiveUpdates() {
-            setInterval(() => {
-                // Add new activity
-                const newActivity = {
-                    type: ['success', 'warning', 'info', 'danger'][Math.floor(Math.random() * 4)],
-                    icon: ['✓', '⚠', 'ℹ', '✕'][Math.floor(Math.random() * 4)],
-                    message: 'System update: ' + Math.random().toString(36).substr(2, 9),
-                    time: 'Just now'
-                };
-                
-                activities.unshift(newActivity);
-                activities.pop();
-                renderActivityFeed();
-
-                // Update stats
-                document.querySelectorAll('.stat-value').forEach(el => {
-                    if (el.textContent.includes('K') || el.textContent.includes('M')) {
-                        const current = parseFloat(el.textContent);
-                        const change = (Math.random() - 0.5) * 0.1;
-                        el.textContent = (current + change).toFixed(1) + el.textContent.slice(-1);
-                    }
-                });
-            }, 5000);
+        function searchAgents(query) {
+            console.log(`Searching for: ${query}`);
+            if (query.length > 2) {
+                showNotification(`🔍 Searching for: ${query}`, 'info');
+            }
         }
 
-        // Modal Functions
+        // Modal functions
         function showModal(title, content) {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalBody').innerHTML = content;
@@ -1768,325 +1468,211 @@
             document.getElementById('modal').classList.remove('active');
         }
 
-        // Command Center
-        function openCommandCenter() {
-            showModal('🎮 Command Center', `
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                    <button class="btn btn-primary" style="padding: 2rem; font-size: 1.1rem;" onclick="massUpdate()">
-                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🔄</span>
+        // Agent actions
+        function viewAgentType(typeId) {
+            const agentType = agentTypes.find(type => type.id === typeId);
+            showModal(`${agentType.icon} ${agentType.name} Overview`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 0.5rem;">Description</h3>
+                        <p style="color: var(--text-secondary);">${agentType.description}</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">${agentType.total}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Total Deployed</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--success); margin-bottom: 0.5rem;">${agentType.active}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Active</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--warning); margin-bottom: 0.5rem;">${agentType.warning}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Warning</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 600; color: var(--danger); margin-bottom: 0.5rem;">${agentType.inactive}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Inactive</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        <button class="btn" onclick="showAgentTypeDetails('${typeId}')">View All ${agentType.name}s</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function viewAgentDetails(agentId) {
+            const agent = sampleAgents.find(a => a.id === agentId);
+            if (!agent) return;
+
+            showModal(`🔍 Agent Details: ${agentId}`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <strong>Type:</strong> ${agent.type}
+                            </div>
+                            <div>
+                                <strong>Customer:</strong> ${agent.customer}
+                            </div>
+                            <div>
+                                <strong>Location:</strong> ${agent.location}
+                            </div>
+                            <div>
+                                <strong>Status:</strong> 
+                                <span class="agent-status ${agent.status}">
+                                    <span class="status-dot"></span>
+                                    ${agent.status}
+                                </span>
+                            </div>
+                            <div>
+                                <strong>Last Seen:</strong> ${agent.lastSeen}
+                            </div>
+                            <div>
+                                <strong>Performance:</strong> ${agent.performance}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 1rem;">Recent Activity</h3>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <div style="padding: 0.5rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ✓ Health check completed - 2 min ago
+                            </div>
+                            <div style="padding: 0.5rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ✓ Configuration updated - 15 min ago
+                            </div>
+                            <div style="padding: 0.5rem; background: rgba(255, 170, 51, 0.05); border-radius: 6px; font-size: 0.9rem;">
+                                ⚠ Memory usage spike detected - 1 hour ago
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        <button class="btn" onclick="restartAgent('${agentId}')">Restart Agent</button>
+                        <button class="btn" onclick="viewAgentLogs('${agentId}')">View Logs</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function restartAgent(agentId) {
+            if (confirm(`Are you sure you want to restart agent ${agentId}?`)) {
+                showNotification('✓ Agent restart initiated successfully', 'success');
+                closeModal();
+            }
+        }
+
+        function deployNewAgent() {
+            showModal('🚀 Deploy New Agent', `
+                <form onsubmit="event.preventDefault(); submitNewAgentDeployment();">
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Customer</label>
+                            <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);" required>
+                                <option value="">Select customer...</option>
+                                <option value="new">New Customer</option>
+                                <option value="techcorp">TechCorp Inc</option>
+                                <option value="cybershield">CyberShield LLC</option>
+                                <option value="securenet">SecureNet AG</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Deployment Region</label>
+                            <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);" required>
+                                <option value="">Select region...</option>
+                                <option value="us-east">US East (Virginia)</option>
+                                <option value="us-west">US West (Oregon)</option>
+                                <option value="eu-west">EU West (Ireland)</option>
+                                <option value="eu-central">EU Central (Frankfurt)</option>
+                                <option value="ap-south">Asia Pacific (Singapore)</option>
+                                <option value="ap-northeast">Asia Pacific (Tokyo)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Agent Configuration</label>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Deploy Main Agent
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Deploy All Sub-Agents
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox"> Custom Configuration
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Deploy Agents</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function submitNewAgentDeployment() {
+            closeModal();
+            showNotification('🚀 Agent deployment initiated successfully!', 'success');
+        }
+
+        function showBulkActions() {
+            showModal('⚡ Bulk Actions', `
+                <div style="display: grid; gap: 1rem;">
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkRestart()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🔄</span>
+                        Restart All Agents
+                    </button>
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkUpdate()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">⬆️</span>
                         Mass Update
                     </button>
-                    <button class="btn btn-danger" style="padding: 2rem; font-size: 1.1rem;" onclick="emergencyShutdown()">
-                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🚨</span>
-                        Emergency Shutdown
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="bulkHealthCheck()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🏥</span>
+                        Health Check All
                     </button>
-                    <button class="btn" style="padding: 2rem; font-size: 1.1rem;" onclick="deployNewAgent()">
-                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🚀</span>
-                        Deploy New Agent
-                    </button>
-                    <button class="btn" style="padding: 2rem; font-size: 1.1rem;" onclick="generateReport()">
-                        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📊</span>
+                    <button class="btn" style="padding: 1.5rem; justify-content: center;" onclick="generateAgentReport()">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">📊</span>
                         Generate Report
                     </button>
                 </div>
             `);
         }
 
-        // Action Functions
-        function viewAgent(id) {
-            showModal(`Agent Details: ${id}`, `
-                <div class="form-group">
-                    <label class="form-label">Agent Information</label>
-                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                            <div>
-                                <strong>Status:</strong> <span class="agent-status active"><span class="status-dot"></span> Active</span>
-                            </div>
-                            <div>
-                                <strong>Location:</strong> New York, US
-                            </div>
-                            <div>
-                                <strong>Uptime:</strong> 99.98%
-                            </div>
-                            <div>
-                                <strong>Last Check:</strong> 2 min ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Performance Metrics</label>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
-                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">12.4K</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Threats/Hour</div>
-                        </div>
-                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">23%</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">CPU Usage</div>
-                        </div>
-                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">847MB</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Memory</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
-                    <button class="btn btn-danger" onclick="toggleAgent('${id}')">Disable Agent</button>
-                </div>
-            `);
-        }
-
-        function massUpdate() {
-            showModal('🔄 Mass Update', `
-                <form onsubmit="event.preventDefault(); deployMassUpdate();">
-                    <div class="form-group">
-                        <label class="form-label">Update Type</label>
-                        <select class="form-select" required>
-                            <option value="">Select update type...</option>
-                            <option value="security">Security Patch v2.2.1</option>
-                            <option value="feature">Feature Update v2.3.0</option>
-                            <option value="critical">Critical Hotfix v2.2.0a</option>
-                            <option value="quantum">Quantum Encryption Update</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Target Agents</label>
-                        <select class="form-select" required>
-                            <option value="all">All Agents (2,847)</option>
-                            <option value="active">Active Agents Only (2,483)</option>
-                            <option value="region">By Region</option>
-                            <option value="custom">Custom Selection</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Deployment Strategy</label>
-                        <select class="form-select" required>
-                            <option value="rolling">Rolling Update (Recommended)</option>
-                            <option value="canary">Canary Deployment (10% first)</option>
-                            <option value="immediate">Immediate (All at once)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Schedule</label>
-                        <input type="datetime-local" class="form-input" value="${new Date().toISOString().slice(0, 16)}">
-                    </div>
-                    <div style="background: rgba(255, 170, 51, 0.1); border: 1px solid var(--warning); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <strong>⚠️ Warning:</strong> This will update all selected agents. Ensure you have tested the update in staging.
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button type="submit" class="btn btn-primary">Deploy Update</button>
-                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-                    </div>
-                </form>
-            `);
-        }
-
-        function deployMassUpdate() {
-            closeModal();
-            showModal('🚀 Update Deployed', `
-                <div style="text-align: center; padding: 2rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">✓</div>
-                    <h3 style="margin-bottom: 1rem;">Mass update initiated successfully!</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Update deployment has started for 2,847 agents.<br>
-                        Estimated completion time: 15 minutes
-                    </p>
-                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
-                </div>
-            `);
-        }
-
-        function emergencyShutdown() {
-            showModal('🚨 Emergency Shutdown', `
-                <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid var(--danger); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--danger); margin-bottom: 0.5rem;">⚠️ CRITICAL ACTION</h3>
-                    <p>This will immediately disable ALL agents globally. This action should only be used in extreme circumstances.</p>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Reason for shutdown</label>
-                    <select class="form-select" required id="shutdownReason">
-                        <option value="">Select reason...</option>
-                        <option value="breach">Security breach detected</option>
-                        <option value="attack">Coordinated attack</option>
-                        <option value="vulnerability">Critical vulnerability</option>
-                        <option value="other">Other emergency</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Type "SHUTDOWN" to confirm</label>
-                    <input type="text" class="form-input" id="shutdownConfirm" placeholder="Type SHUTDOWN to confirm">
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <button class="btn btn-danger" onclick="executeShutdown()">Execute Emergency Shutdown</button>
-                    <button class="btn" onclick="closeModal()">Cancel</button>
-                </div>
-            `);
-        }
-
-        function executeShutdown() {
-            const reason = document.getElementById('shutdownReason').value;
-            const confirm = document.getElementById('shutdownConfirm').value;
-            
-            if (!reason) {
-                alert('Please select a reason for shutdown');
-                return;
-            }
-            
-            if (confirm !== 'SHUTDOWN') {
-                alert('Please type SHUTDOWN to confirm');
-                return;
-            }
-            
-            closeModal();
-            showModal('🚨 Shutdown Executed', `
-                <div style="text-align: center; padding: 2rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--danger);">⚠️</div>
-                    <h3 style="margin-bottom: 1rem; color: var(--danger);">Emergency shutdown executed</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        All 2,847 agents have been disabled.<br>
-                        Incident logged and team notified.
-                    </p>
-                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
-                </div>
-            `);
-        }
-
-        function deployNewAgent() {
-            showModal('🚀 Deploy New Agent', `
-                <form onsubmit="event.preventDefault(); submitNewAgent();">
-                    <div class="form-group">
-                        <label class="form-label">Customer Name</label>
-                        <input type="text" class="form-input" placeholder="Enter customer name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Deployment Location</label>
-                        <select class="form-select" required>
-                            <option value="">Select region...</option>
-                            <option value="us-east">US East (Virginia)</option>
-                            <option value="us-west">US West (Oregon)</option>
-                            <option value="eu-west">EU West (Ireland)</option>
-                            <option value="eu-central">EU Central (Frankfurt)</option>
-                            <option value="ap-south">Asia Pacific (Singapore)</option>
-                            <option value="ap-northeast">Asia Pacific (Tokyo)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">License Type</label>
-                        <select class="form-select" required>
-                            <option value="essential">Essential ($29/mo) - Single Server</option>
-                            <option value="business">Business ($149/mo) - Multi-Site</option>
-                            <option value="enterprise">Enterprise ($499/mo) - Global Infrastructure</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Encryption Configuration</label>
-                        <select class="form-select" required>
-                            <option value="hybrid">Hybrid (Classical + Quantum) - Recommended</option>
-                            <option value="classical">Classical Only</option>
-                            <option value="quantum">Quantum-Resistant Only</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button type="submit" class="btn btn-primary">Deploy Agent</button>
-                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-                    </div>
-                </form>
-            `);
-        }
-
-        function submitNewAgent() {
-            closeModal();
-            showModal('✅ Agent Deployed', `
-                <div style="text-align: center; padding: 2rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--success);">🚀</div>
-                    <h3 style="margin-bottom: 1rem;">New agent deployed successfully!</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        Agent ID: <strong>SX-${Math.floor(Math.random() * 9000) + 1000}</strong>
-                    </p>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Deployment credentials have been sent to the customer email.<br>
-                        The agent will appear in the dashboard once it comes online.
-                    </p>
-                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
-                </div>
-            `);
-        }
-
-        function generateReport() {
-            showModal('📊 Generate Report', `
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateFinancialReport()">
-                        <div style="text-align: center; padding: 2rem;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
-                            <h3>Financial Report</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Revenue, MRR, customer metrics</p>
-                        </div>
-                    </div>
-                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateSecurityReport()">
-                        <div style="text-align: center; padding: 2rem;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
-                            <h3>Security Report</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Threats, vulnerabilities, incidents</p>
-                        </div>
-                    </div>
-                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generatePerformanceReport()">
-                        <div style="text-align: center; padding: 2rem;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
-                            <h3>Performance Report</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">System health, uptime, metrics</p>
-                        </div>
-                    </div>
-                    <div class="card" style="cursor: pointer; transition: all 0.3s ease;" onclick="generateComplianceReport()">
-                        <div style="text-align: center; padding: 2rem;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
-                            <h3>Compliance Report</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">SOC2, ISO27001, audit logs</p>
-                        </div>
-                    </div>
-                </div>
-            `);
-        }
-
-        function viewAlert(agent) {
-            showModal(`Alert Details: ${agent}`, `
-                <div class="form-group">
-                    <label class="form-label">Alert Information</label>
-                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
-                        <div><strong>Type:</strong> Critical Security Breach Attempt</div>
-                        <div><strong>Time:</strong> ${new Date().toLocaleString()}</div>
-                        <div><strong>Source:</strong> 185.220.101.45 (Tor Exit Node)</div>
-                        <div><strong>Attack Vector:</strong> SQL Injection</div>
-                        <div><strong>Status:</strong> Blocked by AI Defense</div>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
-                    <button class="btn" onclick="investigateAlert()">Investigate</button>
-                </div>
-            `);
-        }
-
-        function dismissAlert(btn) {
-            const row = btn.closest('tr');
-            row.style.animation = 'fadeOut 0.3s ease';
-            setTimeout(() => row.remove(), 300);
-        }
-
-        function clearAllAlerts() {
-            if (confirm('Clear all alerts? This action cannot be undone.')) {
-                document.getElementById('alertsTable').innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                            No active alerts
-                        </td>
-                    </tr>
-                `;
+        // Bulk action functions
+        function bulkRestart() {
+            if (confirm('This will restart ALL agents across all customers. Are you sure?')) {
+                closeModal();
+                showNotification('⚡ Bulk restart initiated for all agents', 'success');
             }
         }
 
-        // User Menu Functions
+        function bulkUpdate() {
+            closeModal();
+            showNotification('📦 Bulk update process started', 'success');
+        }
+
+        function bulkHealthCheck() {
+            closeModal();
+            showNotification('🏥 Health check initiated for all agents', 'success');
+        }
+
+        function generateAgentReport() {
+            closeModal();
+            showNotification('📊 Agent report generation started', 'success');
+        }
+
+        // User Menu Functions - Same as dashboard
         function showProfile() {
             showModal('👤 Admin Profile', `
                 <div style="text-align: center; margin-bottom: 2rem;">
@@ -2161,23 +1747,7 @@
 
         function saveSettings() {
             closeModal();
-            // Show notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--success);
-                color: var(--primary-bg);
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
-                animation: slideIn 0.3s ease;
-                z-index: 3000;
-            `;
-            notification.textContent = '✓ Settings saved successfully';
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
+            showNotification('✓ Settings saved successfully', 'success');
         }
 
         function showApiKeys() {
@@ -2217,23 +1787,7 @@
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text);
-            // Show notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: var(--secondary-bg);
-                color: var(--text-primary);
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                border: 1px solid var(--accent);
-                animation: slideIn 0.3s ease;
-                z-index: 3000;
-            `;
-            notification.textContent = '✓ Copied to clipboard';
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 2000);
+            showNotification('✓ Copied to clipboard', 'success');
         }
 
         function showActivityLog() {
@@ -2266,59 +1820,50 @@
                         <div style="width: 75%; background: var(--accent); height: 100%; border-radius: 20px; transition: width 1s ease;"></div>
                     </div>
                     <p style="color: var(--text-secondary);">
-                        Compiling data from all 2,847 agents...
+                        Compiling data from all ${PLATFORM_DATA.totalAgents} agents...
                     </p>
                 </div>
             `);
             
             setTimeout(() => {
                 closeModal();
-                // Trigger download
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    background: var(--success);
-                    color: var(--primary-bg);
-                    padding: 1rem 1.5rem;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
-                    animation: slideIn 0.3s ease;
-                    z-index: 3000;
-                `;
-                notification.textContent = '✓ Report downloaded successfully';
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 3000);
+                showNotification('✓ Report downloaded successfully', 'success');
             }, 2000);
         }
 
-        // Filter Map
-        function filterMap(status) {
-            const buttons = document.querySelectorAll('.map-control-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // In a real implementation, this would filter map markers
-            console.log(`Filtering map by: ${status}`);
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--info)'};
+                color: var(--primary-bg);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
         }
 
-        // Sidebar Functions - Now with proper page navigation
-        function showDeployments() { alert('Deployments view coming soon...'); }
-        function showMaintenance() { alert('Maintenance view coming soon...'); }
-        function showBackups() { alert('Backups view coming soon...'); }
-        function showFinancials() { alert('Financials view coming soon...'); }
-        function showTickets() { alert('Tickets view coming soon...'); }
-        function showDocumentation() { alert('Documentation coming soon...'); }
+        // Sidebar navigation functions
+        function showDeployments() { showNotification('🚀 Deployments view coming soon...', 'info'); }
+        function showMaintenance() { showNotification('🔧 Maintenance view coming soon...', 'info'); }
+        function showBackups() { showNotification('💾 Backups view coming soon...', 'info'); }
+        function showFinancials() { showNotification('💰 Financials view coming soon...', 'info'); }
+        function showTickets() { showNotification('🎫 Tickets view coming soon...', 'info'); }
+        function showDocumentation() { showNotification('📚 Documentation coming soon...', 'info'); }
 
-        // Report Functions
-        function generateFinancialReport() { closeModal(); downloadReport(); }
-        function generateSecurityReport() { closeModal(); downloadReport(); }
-        function generatePerformanceReport() { closeModal(); downloadReport(); }
-        function generateComplianceReport() { closeModal(); downloadReport(); }
-        function generateNewKey() { alert('New API key generated successfully!'); showApiKeys(); }
-        function investigateAlert() { alert('Opening investigation dashboard...'); }
-        function toggleAgent(id) { alert(`Agent ${id} toggled successfully!`); }
+        // Additional functions
+        function generateNewKey() { showNotification('🔑 New API key generated successfully!', 'success'); showApiKeys(); }
+        function viewAgentLogs(agentId) { showNotification(`📝 Opening logs for ${agentId}`, 'info'); }
+        function showAgentTypeDetails(typeId) { showNotification(`📊 Opening detailed view for ${typeId} agents`, 'info'); }
 
         // Close modal on escape
         document.addEventListener('keydown', function(e) {
@@ -2327,26 +1872,24 @@
             }
         });
 
-        // Session management
-        window.addEventListener('beforeunload', function() {
-            sessionStorage.setItem('lastActivity', new Date().toISOString());
-        });
-
-        // Check session timeout (30 minutes)
-        setInterval(() => {
-            const lastActivity = sessionStorage.getItem('lastActivity');
-            if (lastActivity) {
-                const timeDiff = new Date() - new Date(lastActivity);
-                if (timeDiff > 30 * 60 * 1000) { // 30 minutes
-                    alert('Session expired. Please log in again.');
-                    sessionStorage.removeItem('loggedIn');
-                    window.location.href = 'index.html';
+        // Animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
                 }
             }
-        }, 60000); // Check every minute
+        `;
+        document.head.appendChild(style);
 
         // Initialize on load
-        window.onload = initDashboard;
+        window.onload = initAgentsPage;
     </script>
 </body>
 </html>
