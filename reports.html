@@ -268,6 +268,75 @@
             color: var(--text-secondary);
         }
 
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-width: 220px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            animation: dropdownSlide 0.3s ease;
+            z-index: 2000;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .dropdown-email {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            padding-left: 1.5rem;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--danger);
+        }
+
         /* Main Layout */
         .main-container {
             display: flex;
@@ -1018,6 +1087,34 @@
                         </div>
                         <span style="color: var(--text-secondary); font-size: 0.75rem;">▼</span>
                     </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <div>
+                                <div class="user-name">Super Admin</div>
+                                <div class="dropdown-email">admin@aisentinel-x.com</div>
+                            </div>
+                        </div>
+                        <a href="#" class="dropdown-item" onclick="showProfile()">
+                            <span>👤</span> Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showSettings()">
+                            <span>⚙️</span> Settings
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="showApiKeys()">
+                            <span>🔑</span> API Keys
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="showActivityLog()">
+                            <span>📋</span> Activity Log
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="downloadReport()">
+                            <span>📊</span> Download Report
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item logout" onclick="logout()">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1329,6 +1426,22 @@
     </div>
 
     <script>
+        // Global platform data - consistent across all pages
+        const PLATFORM_DATA = {
+            totalAgents: 2847,
+            activeAgents: 2483,
+            warningAgents: 317,
+            inactiveAgents: 47,
+            threatsBlocked: 14200000,
+            activeThreatIncidents: 47,
+            customers: 847,
+            monthlyRevenue: 487000,
+            systemHealth: 99.98,
+            reportCount: 1247,
+            activeSchedules: 23,
+            supportTickets: 23
+        };
+
         // Sample data
         const recentReports = [
             { name: 'Q1 Security Assessment', type: 'PDF', size: '2.4 MB', generated: '2 hours ago', category: 'security' },
@@ -1356,6 +1469,26 @@
 
             renderRecentReports();
             renderScheduledReports();
+        }
+
+        // User menu toggle
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenu = document.querySelector('.user-menu');
+            if (!userMenu.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('lastActivity');
         }
 
         // Render recent reports
@@ -2069,6 +2202,165 @@
             `);
         }
 
+        // User Menu Functions - Same as other pages
+        function showProfile() {
+            showModal('👤 Admin Profile', `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--accent), #00cc70); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--primary-bg);">SA</div>
+                    <h3>Super Admin</h3>
+                    <p style="color: var(--text-secondary);">admin@aisentinel-x.com</p>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Role:</strong> System Administrator
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Access Level:</strong> Full System Access
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Last Login:</strong> ${new Date().toLocaleString()}
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Session Duration:</strong> ${Math.floor(Math.random() * 120) + 30} minutes
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function showSettings() {
+            showModal('⚙️ Settings', `
+                <form onsubmit="event.preventDefault(); saveSettings();">
+                    <div class="form-group">
+                        <label class="form-label">Dashboard Refresh Rate</label>
+                        <select class="form-select">
+                            <option value="5">5 seconds</option>
+                            <option value="10">10 seconds</option>
+                            <option value="30" selected>30 seconds</option>
+                            <option value="60">1 minute</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notifications</label>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Critical alerts
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> System updates
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Performance reports
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Security incidents
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Theme</label>
+                        <select class="form-select">
+                            <option value="dark" selected>Dark Mode</option>
+                            <option value="darker">Darker Mode</option>
+                            <option value="midnight">Midnight Black</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveSettings() {
+            closeModal();
+            showNotification('✓ Settings saved successfully', 'success');
+        }
+
+        function showApiKeys() {
+            showModal('🔑 API Keys', `
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>Production API Key</strong>
+                            <button class="btn btn-sm" onclick="copyToClipboard('sk_live_****7a8b')">Copy</button>
+                        </div>
+                        <code style="font-family: monospace; color: var(--text-secondary);">
+                            sk_live_****************************7a8b
+                        </code>
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
+                            Created: Jan 15, 2025 • Last used: 2 hours ago
+                        </div>
+                    </div>
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>Test API Key</strong>
+                            <button class="btn btn-sm" onclick="copyToClipboard('sk_test_****9c2d')">Copy</button>
+                        </div>
+                        <code style="font-family: monospace; color: var(--text-secondary);">
+                            sk_test_****************************9c2d
+                        </code>
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
+                            Created: Jan 10, 2025 • Last used: Yesterday
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="generateNewKey()">Generate New Key</button>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            showNotification('✓ Copied to clipboard', 'success');
+        }
+
+        function showActivityLog() {
+            showModal('📋 Activity Log', `
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${[...Array(10)].map((_, i) => `
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>${new Date(Date.now() - i * 3600000).toLocaleTimeString()}</strong>
+                                <span style="margin-left: auto; color: var(--text-secondary);">IP: 192.168.1.${100 + i}</span>
+                            </div>
+                            <div style="color: var(--text-secondary);">
+                                ${['Generated financial report', 'Updated report schedule', 'Shared security report', 'Created custom report', 'Downloaded compliance audit'][i % 5]}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function downloadReport() {
+            showModal('📊 Download Report', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📥</div>
+                    <h3 style="margin-bottom: 1rem;">Generating comprehensive report...</h3>
+                    <div style="width: 100%; background: var(--secondary-bg); border-radius: 20px; height: 8px; margin-bottom: 1rem;">
+                        <div style="width: 75%; background: var(--accent); height: 100%; border-radius: 20px; transition: width 1s ease;"></div>
+                    </div>
+                    <p style="color: var(--text-secondary);">
+                        Compiling data from all ${PLATFORM_DATA.reportCount} reports...
+                    </p>
+                </div>
+            `);
+            
+            setTimeout(() => {
+                closeModal();
+                showNotification('✓ Report downloaded successfully', 'success');
+            }, 2000);
+        }
+
         // Modal functions
         function showModal(title, content) {
             document.getElementById('modalTitle').textContent = title;
@@ -2101,17 +2393,16 @@
             setTimeout(() => notification.remove(), 4000);
         }
 
-        function toggleUserMenu() {
-            // Would implement user menu toggle
-        }
-
         // Sidebar navigation functions
-        function showDeployments() { alert('Deployments view coming soon...'); }
-        function showMaintenance() { alert('Maintenance view coming soon...'); }
-        function showBackups() { alert('Backups view coming soon...'); }
-        function showFinancials() { alert('Financials view coming soon...'); }
-        function showTickets() { alert('Tickets view coming soon...'); }
-        function showDocumentation() { alert('Documentation coming soon...'); }
+        function showDeployments() { showNotification('🚀 Deployments view coming soon...', 'info'); }
+        function showMaintenance() { showNotification('🔧 Maintenance view coming soon...', 'info'); }
+        function showBackups() { showNotification('💾 Backups view coming soon...', 'info'); }
+        function showFinancials() { showNotification('💰 Financials view coming soon...', 'info'); }
+        function showTickets() { showNotification('🎫 Tickets view coming soon...', 'info'); }
+        function showDocumentation() { showNotification('📚 Documentation coming soon...', 'info'); }
+
+        // Additional functions
+        function generateNewKey() { showNotification('🔑 New API key generated successfully!', 'success'); showApiKeys(); }
 
         // Animation keyframes
         const style = document.createElement('style');
