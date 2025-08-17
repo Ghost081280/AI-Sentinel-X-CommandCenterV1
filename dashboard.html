@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1285,11 +1284,11 @@
             </div>
             
             <nav class="nav-links">
-                <a href="#" class="nav-link active">Dashboard</a>
-                <a href="#" class="nav-link">Agents</a>
-                <a href="#" class="nav-link">Analytics</a>
-                <a href="#" class="nav-link">Threats</a>
-                <a href="#" class="nav-link">Reports</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="agents.html" class="nav-link">Agents</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+                <a href="threats.html" class="nav-link">Threats</a>
+                <a href="reports.html" class="nav-link">Reports</a>
             </nav>
 
             <div class="header-right">
@@ -1356,15 +1355,15 @@
         <aside class="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-title">Main</div>
-                <a href="#" class="sidebar-item active" onclick="showDashboard()">
+                <a href="dashboard.html" class="sidebar-item active">
                     <span>📊</span> Dashboard
                     <span class="sidebar-badge">Live</span>
                 </a>
-                <a href="#" class="sidebar-item" onclick="showAgents()">
+                <a href="agents.html" class="sidebar-item">
                     <span>🤖</span> Agents
                     <span class="sidebar-badge">2,847</span>
                 </a>
-                <a href="#" class="sidebar-item" onclick="showThreats()">
+                <a href="threats.html" class="sidebar-item">
                     <span>🛡️</span> Threats
                     <span class="sidebar-badge danger">47</span>
                 </a>
@@ -1386,13 +1385,13 @@
             
             <div class="sidebar-section">
                 <div class="sidebar-title">Analytics</div>
-                <a href="#" class="sidebar-item" onclick="showPerformance()">
+                <a href="analytics.html" class="sidebar-item">
                     <span>⚡</span> Performance
                 </a>
                 <a href="#" class="sidebar-item" onclick="showFinancials()">
                     <span>💰</span> Financials
                 </a>
-                <a href="#" class="sidebar-item" onclick="showReports()">
+                <a href="reports.html" class="sidebar-item">
                     <span>📈</span> Reports
                 </a>
             </div>
@@ -1524,7 +1523,7 @@
                         <h2 class="card-title">
                             <span>🏆</span> Top Performing Agents
                         </h2>
-                        <button class="btn btn-sm" onclick="showAllAgents()">View All</button>
+                        <button class="btn btn-sm" onclick="window.location.href='agents.html'">View All</button>
                     </div>
                     <div class="agent-grid">
                         <!-- Agent cards will be dynamically generated -->
@@ -2304,16 +2303,11 @@
             console.log(`Filtering map by: ${status}`);
         }
 
-        // Sidebar Functions
-        function showDashboard() { location.reload(); }
-        function showAgents() { alert('Agents view coming soon...'); }
-        function showThreats() { alert('Threats view coming soon...'); }
+        // Sidebar Functions - Now with proper page navigation
         function showDeployments() { alert('Deployments view coming soon...'); }
         function showMaintenance() { alert('Maintenance view coming soon...'); }
         function showBackups() { alert('Backups view coming soon...'); }
-        function showPerformance() { alert('Performance view coming soon...'); }
         function showFinancials() { alert('Financials view coming soon...'); }
-        function showReports() { alert('Reports view coming soon...'); }
         function showTickets() { alert('Tickets view coming soon...'); }
         function showDocumentation() { alert('Documentation coming soon...'); }
 
@@ -2325,7 +2319,6 @@
         function generateNewKey() { alert('New API key generated successfully!'); showApiKeys(); }
         function investigateAlert() { alert('Opening investigation dashboard...'); }
         function toggleAgent(id) { alert(`Agent ${id} toggled successfully!`); }
-        function showAllAgents() { showAgents(); }
 
         // Close modal on escape
         document.addEventListener('keydown', function(e) {
