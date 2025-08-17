@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentinel-X | Analytics Dashboard - Super Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #0f0f0f;
+            --accent: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffaa33;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border-color: #2a2a2a;
+            --success: #00ff88;
+            --info: #3388ff;
+            --purple: #8b5cf6;
+            --orange: #f97316;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(51, 136, 255, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(255, 51, 102, 0.02) 0%, transparent 40%);
+            animation: bgShift 30s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        /* Grid Background Pattern */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .stat-badge {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-badge:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-badge-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .stat-badge-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-button:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #00cc70);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-bg);
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.5);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--accent);
+        }
+
+        .sidebar-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+        }
+
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--primary-bg);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-badge.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .sidebar-badge.warning {
+            background: var(--warning);
+            color: var(--primary-bg);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .time-selector {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .time-selector:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .kpi-icon.success { background: rgba(0, 255, 136, 0.1); color: var(--success); }
+        .kpi-icon.danger { background: rgba(255, 51, 102, 0.1); color: var(--danger); }
+        .kpi-icon.warning { background: rgba(255, 170, 51, 0.1); color: var(--warning); }
+        .kpi-icon.info { background: rgba(51, 136, 255, 0.1); color: var(--info); }
+        .kpi-icon.purple { background: rgba(139, 92, 246, 0.1); color: var(--purple); }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .kpi-trend.up { color: var(--success); }
+        .kpi-trend.down { color: var(--danger); }
+        .kpi-trend.stable { color: var(--text-secondary); }
+
+        .kpi-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .kpi-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0, 255, 136, 0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 136, 0.02);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .chart-placeholder {
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Performance Metrics Table */
+        .metrics-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .metrics-table th {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metrics-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .metrics-table tbody tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .metrics-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Metric Bar */
+        .metric-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .metric-bar-fill.success { background: var(--success); }
+        .metric-bar-fill.warning { background: var(--warning); }
+        .metric-bar-fill.danger { background: var(--danger); }
+
+        /* Alert Panel */
+        .alert-panel {
+            background: rgba(255, 170, 51, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        /* Grid Layout Classes */
+        .full-width { grid-column: span 12; }
+        .two-thirds { grid-column: span 8; }
+        .one-third { grid-column: span 4; }
+        .half { grid-column: span 6; }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #00cc70;
+            border-color: #00cc70;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        /* Real-time Data Indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--success);
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .two-thirds { grid-column: span 12; }
+            .one-third { grid-column: span 12; }
+            .half { grid-column: span 12; }
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1rem 0;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                display: none;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .page-actions {
+                justify-content: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                AI SENTINEL-X
+            </div>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="agents.html" class="nav-link">Agents</a>
+                <a href="analytics.html" class="nav-link active">Analytics</a>
+                <a href="threats.html" class="nav-link">Threats</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">14.2B</div>
+                            <div class="stat-badge-label">Events Processed</div>
+                        </div>
+                    </div>
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">847</div>
+                            <div class="stat-badge-label">Active Customers</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-button" onclick="toggleUserMenu()">
+                        <div class="user-avatar">SA</div>
+                        <div class="user-info">
+                            <div class="user-name">Super Admin</div>
+                            <div class="user-role">System Administrator</div>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">▼</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <a href="dashboard.html" class="sidebar-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="agents.html" class="sidebar-item">
+                    <span>🤖</span> Agents
+                    <span class="sidebar-badge">2,847</span>
+                </a>
+                <a href="threats.html" class="sidebar-item">
+                    <span>🛡️</span> Threats
+                    <span class="sidebar-badge danger">47</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Operations</div>
+                <a href="#" class="sidebar-item" onclick="showDeployments()">
+                    <span>🚀</span> Deployments
+                </a>
+                <a href="#" class="sidebar-item" onclick="showMaintenance()">
+                    <span>🔧</span> Maintenance
+                    <span class="sidebar-badge warning">3</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showBackups()">
+                    <span>💾</span> Backups
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Analytics</div>
+                <a href="analytics.html" class="sidebar-item active">
+                    <span>⚡</span> Performance
+                </a>
+                <a href="#" class="sidebar-item" onclick="showFinancials()">
+                    <span>💰</span> Financials
+                </a>
+                <a href="reports.html" class="sidebar-item">
+                    <span>📈</span> Reports
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Support</div>
+                <a href="#" class="sidebar-item" onclick="showTickets()">
+                    <span>🎫</span> Tickets
+                    <span class="sidebar-badge">23</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showDocumentation()">
+                    <span>📚</span> Documentation
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <span>📊</span> Analytics Dashboard
+                        <span class="live-indicator">
+                            <span class="live-dot"></span>
+                            Live Data
+                        </span>
+                    </h1>
+                    <p class="page-subtitle">
+                        Real-time performance analytics and business intelligence across all AI Sentinel-X deployments
+                    </p>
+                </div>
+                <div class="page-actions">
+                    <select class="time-selector" onchange="updateTimeRange(this.value)">
+                        <option value="1h">Last Hour</option>
+                        <option value="24h" selected>Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                    </select>
+                    <button class="btn" onclick="refreshData()">
+                        <span>🔄</span> Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="exportAnalytics()">
+                        <span>📊</span> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Alert Panel -->
+            <div class="alert-panel">
+                <div class="alert-header">
+                    <span>⚠️</span>
+                    Performance Alert
+                </div>
+                <p>CPU usage spike detected across 23 agents in EU-Central region. Automated scaling initiated.</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon success">🛡️</div>
+                        <div class="kpi-trend up">
+                            <span>↗</span> +23%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">Threats Blocked</h3>
+                    <div class="kpi-value">14.2M</div>
+                    <div class="kpi-subtitle">Today's total across all customers</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon info">⚡</div>
+                        <div class="kpi-trend stable">
+                            <span>→</span> 0%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">System Performance</h3>
+                    <div class="kpi-value">99.98%</div>
+                    <div class="kpi-subtitle">Average uptime across fleet</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon warning">🔥</div>
+                        <div class="kpi-trend down">
+                            <span>↘</span> -12%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">Response Time</h3>
+                    <div class="kpi-value">0.8ms</div>
+                    <div class="kpi-subtitle">Average threat detection latency</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon purple">💰</div>
+                        <div class="kpi-trend up">
+                            <span>↗</span> +18%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">Revenue</h3>
+                    <div class="kpi-value">$487K</div>
+                    <div class="kpi-subtitle">Monthly recurring revenue</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon success">📈</div>
+                        <div class="kpi-trend up">
+                            <span>↗</span> +7%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">Customer Growth</h3>
+                    <div class="kpi-value">847</div>
+                    <div class="kpi-subtitle">Active customer deployments</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon danger">🔍</div>
+                        <div class="kpi-trend up">
+                            <span>↗</span> +31%
+                        </div>
+                    </div>
+                    <h3 class="kpi-title">ML Accuracy</h3>
+                    <div class="kpi-value">99.7%</div>
+                    <div class="kpi-subtitle">Threat detection precision</div>
+                </div>
+            </div>
+
+            <!-- Analytics Grid -->
+            <div class="analytics-grid">
+                <!-- Threat Detection Chart -->
+                <div class="chart-card two-thirds">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span>🛡️</span> Threat Detection Over Time
+                        </h2>
+                        <div class="chart-actions">
+                            <button class="btn btn-sm" onclick="viewChart('threats')">Expand</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                            <div>Real-time threat detection chart would display here</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                Showing 14.2M threats blocked in last 24h
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Health -->
+                <div class="chart-card one-third">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span>❤️</span> System Health
+                        </h2>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--success);">99.98%</div>
+                            <div>Overall Health Score</div>
+                            <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">
+                                2,847 agents monitored
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span>⚡</span> Agent Performance Metrics
+                        </h2>
+                        <div class="chart-actions">
+                            <button class="btn btn-sm" onclick="refreshMetrics()">Refresh</button>
+                            <button class="btn btn-sm" onclick="exportMetrics()">Export</button>
+                        </div>
+                    </div>
+                    <table class="metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Type</th>
+                                <th>Active Count</th>
+                                <th>Avg CPU</th>
+                                <th>Avg Memory</th>
+                                <th>Avg Response Time</th>
+                                <th>Health Score</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metricsTableBody">
+                            <!-- Metrics will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Regional Performance -->
+                <div class="chart-card half">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span>🌍</span> Regional Performance
+                        </h2>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗺️</div>
+                            <div>Regional performance heatmap</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                6 regions monitored globally
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Analytics -->
+                <div class="chart-card half">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span>👥</span> Customer Analytics
+                        </h2>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                            <div>Customer growth trends</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                                +7% growth this month
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <span class="modal-close" onclick="closeModal()">×</span>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Performance metrics data
+        const performanceMetrics = [
+            {
+                type: 'Main Agent',
+                icon: '🤖',
+                activeCount: 2847,
+                avgCpu: '23%',
+                avgMemory: '1.2GB',
+                responseTime: '0.8ms',
+                healthScore: 99.8,
+                performance: 98.5
+            },
+            {
+                type: 'ThreatScanner',
+                icon: '🛡️',
+                activeCount: 2752,
+                avgCpu: '31%',
+                avgMemory: '847MB',
+                responseTime: '0.3ms',
+                healthScore: 99.7,
+                performance: 99.2
+            },
+            {
+                type: 'NetworkMapper',
+                icon: '🌐',
+                activeCount: 2691,
+                avgCpu: '18%',
+                avgMemory: '654MB',
+                responseTime: '1.2ms',
+                healthScore: 94.2,
+                performance: 92.8
+            },
+            {
+                type: 'DefenseOrchestrator',
+                icon: '⚔️',
+                activeCount: 2715,
+                avgCpu: '27%',
+                avgMemory: '1.1GB',
+                responseTime: '0.9ms',
+                healthScore: 95.8,
+                performance: 96.1
+            },
+            {
+                type: 'EncryptionManager',
+                icon: '🔐',
+                activeCount: 2798,
+                avgCpu: '15%',
+                avgMemory: '523MB',
+                responseTime: '0.5ms',
+                healthScore: 98.2,
+                performance: 99.1
+            },
+            {
+                type: 'AnalyticsEngine',
+                icon: '📊',
+                activeCount: 2781,
+                avgCpu: '42%',
+                avgMemory: '2.1GB',
+                responseTime: '1.8ms',
+                healthScore: 97.6,
+                performance: 94.3
+            },
+            {
+                type: 'LogAgent',
+                icon: '📝',
+                activeCount: 2724,
+                avgCpu: '12%',
+                avgMemory: '387MB',
+                responseTime: '0.4ms',
+                healthScore: 96.8,
+                performance: 97.2
+            },
+            {
+                type: 'ComplianceMonitor',
+                icon: '✅',
+                activeCount: 2785,
+                avgCpu: '8%',
+                avgMemory: '234MB',
+                responseTime: '0.6ms',
+                healthScore: 98.9,
+                performance: 98.7
+            }
+        ];
+
+        // Initialize the analytics page
+        function initAnalyticsPage() {
+            // Check if user is logged in
+            if (!sessionStorage.getItem('loggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            renderMetricsTable();
+            startLiveUpdates();
+        }
+
+        // Render performance metrics table
+        function renderMetricsTable() {
+            const tbody = document.getElementById('metricsTableBody');
+            tbody.innerHTML = performanceMetrics.map(metric => {
+                const healthClass = metric.healthScore > 95 ? 'success' : metric.healthScore > 85 ? 'warning' : 'danger';
+                const performanceClass = metric.performance > 95 ? 'success' : metric.performance > 85 ? 'warning' : 'danger';
+                
+                return `
+                    <tr onclick="viewMetricDetails('${metric.type}')">
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="font-size: 1.2rem;">${metric.icon}</span>
+                                <strong>${metric.type}</strong>
+                            </div>
+                        </td>
+                        <td>${metric.activeCount.toLocaleString()}</td>
+                        <td>${metric.avgCpu}</td>
+                        <td>${metric.avgMemory}</td>
+                        <td>${metric.responseTime}</td>
+                        <td>
+                            <div>${metric.healthScore}%</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill ${healthClass}" style="width: ${metric.healthScore}%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>${metric.performance}%</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill ${performanceClass}" style="width: ${metric.performance}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Live data updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Simulate live data updates
+                updateKPIValues();
+                updateMetrics();
+            }, 5000);
+        }
+
+        function updateKPIValues() {
+            // Simulate small changes in KPI values
+            const kpiValues = document.querySelectorAll('.kpi-value');
+            kpiValues.forEach(value => {
+                if (value.textContent.includes('M') || value.textContent.includes('K')) {
+                    const current = parseFloat(value.textContent);
+                    const change = (Math.random() - 0.5) * 0.05; // ±2.5% change
+                    const newValue = Math.max(0, current * (1 + change));
+                    value.textContent = newValue.toFixed(1) + value.textContent.slice(-1);
+                }
+            });
+        }
+
+        function updateMetrics() {
+            // Simulate metric updates
+            performanceMetrics.forEach(metric => {
+                metric.healthScore += (Math.random() - 0.5) * 0.2;
+                metric.healthScore = Math.max(85, Math.min(100, metric.healthScore));
+                
+                metric.performance += (Math.random() - 0.5) * 0.3;
+                metric.performance = Math.max(80, Math.min(100, metric.performance));
+            });
+            
+            renderMetricsTable();
+        }
+
+        // Chart and analytics functions
+        function viewChart(chartType) {
+            showModal(`📊 ${chartType.charAt(0).toUpperCase() + chartType.slice(1)} Analytics`, `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
+                    <h3 style="margin-bottom: 1rem;">Detailed ${chartType} analytics view</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Interactive charts and detailed metrics would be displayed here with drill-down capabilities.
+                    </p>
+                    <div style="background: var(--secondary-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--accent);">Real-time Data Stream</div>
+                        <div style="color: var(--text-secondary);">Advanced analytics dashboard with filtering and export options</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function viewMetricDetails(agentType) {
+            const metric = performanceMetrics.find(m => m.type === agentType);
+            if (!metric) return;
+
+            showModal(`${metric.icon} ${agentType} Performance Details`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 1rem;">Current Performance</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Active Agents</div>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);">${metric.activeCount.toLocaleString()}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Health Score</div>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--success);">${metric.healthScore.toFixed(1)}%</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Avg CPU Usage</div>
+                                <div style="font-size: 1.5rem; font-weight: 600;">${metric.avgCpu}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Response Time</div>
+                                <div style="font-size: 1.5rem; font-weight: 600;">${metric.responseTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--secondary-bg); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="margin-bottom: 1rem;">Recent Trends</h3>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <div style="padding: 0.75rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px;">
+                                ↗ Performance improved by 2.3% in last hour
+                            </div>
+                            <div style="padding: 0.75rem; background: rgba(255, 170, 51, 0.05); border-radius: 6px;">
+                                ⚠ Memory usage spike detected 15 minutes ago
+                            </div>
+                            <div style="padding: 0.75rem; background: rgba(0, 255, 136, 0.05); border-radius: 6px;">
+                                ✓ All agents responding within SLA
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        <button class="btn" onclick="optimizeAgentType('${agentType}')">Optimize</button>
+                        <button class="btn" onclick="viewAgentLogs('${agentType}')">View Logs</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Action functions
+        function updateTimeRange(range) {
+            showNotification(`📊 Analytics updated to show ${range}`, 'info');
+            // In real implementation, would update all charts and metrics
+        }
+
+        function refreshData() {
+            showNotification('🔄 Analytics data refreshed', 'success');
+            updateKPIValues();
+            updateMetrics();
+        }
+
+        function exportAnalytics() {
+            showModal('📊 Export Analytics', `
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Export Format</label>
+                        <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                            <option>PDF Report</option>
+                            <option>Excel Spreadsheet</option>
+                            <option>CSV Data</option>
+                            <option>JSON Data</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Date Range</label>
+                        <select style="width: 100%; padding: 0.75rem; background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                            <option>Last 24 Hours</option>
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Custom Range</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Include</label>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Performance metrics
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Threat analytics
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Customer data
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Financial metrics
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="performExport()">Export</button>
+                        <button class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function performExport() {
+            closeModal();
+            showNotification('📊 Export started - you\'ll receive an email when ready', 'success');
+        }
+
+        function refreshMetrics() {
+            showNotification('⚡ Performance metrics refreshed', 'success');
+            updateMetrics();
+        }
+
+        function exportMetrics() {
+            showNotification('📊 Metrics export initiated', 'success');
+        }
+
+        function optimizeAgentType(agentType) {
+            closeModal();
+            showNotification(`⚡ Optimization started for ${agentType} agents`, 'success');
+        }
+
+        function viewAgentLogs(agentType) {
+            closeModal();
+            showNotification(`📝 Opening logs for ${agentType}`, 'info');
+        }
+
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--info)'};
+                color: var(--primary-bg);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        function toggleUserMenu() {
+            // Would implement user menu toggle
+        }
+
+        // Sidebar navigation functions
+        function showDeployments() { alert('Deployments view coming soon...'); }
+        function showMaintenance() { alert('Maintenance view coming soon...'); }
+        function showBackups() { alert('Backups view coming soon...'); }
+        function showFinancials() { alert('Financials view coming soon...'); }
+        function showTickets() { alert('Tickets view coming soon...'); }
+        function showDocumentation() { alert('Documentation coming soon...'); }
+
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize on load
+        window.onload = initAnalyticsPage;
+    </script>
+</body>
+</html>
