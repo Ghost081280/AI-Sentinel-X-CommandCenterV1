@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentinel-X | Reports & Business Intelligence - Super Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #0f0f0f;
+            --accent: #00ff88;
+            --danger: #ff3366;
+            --warning: #ffaa33;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border-color: #2a2a2a;
+            --success: #00ff88;
+            --info: #3388ff;
+            --purple: #8b5cf6;
+            --orange: #f97316;
+            --indigo: #4f46e5;
+            --pink: #ec4899;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(51, 136, 255, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.02) 0%, transparent 40%);
+            animation: bgShift 30s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        /* Grid Background Pattern */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .stat-badge {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-badge:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-badge-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .stat-badge-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-button:hover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #00cc70);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-bg);
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.5);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            color: var(--accent);
+        }
+
+        .sidebar-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+        }
+
+        .sidebar-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--primary-bg);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-badge.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .sidebar-badge.warning {
+            background: var(--warning);
+            color: var(--primary-bg);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Report Categories */
+        .report-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--purple), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .category-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-icon.financial { background: rgba(0, 255, 136, 0.1); color: var(--success); }
+        .category-icon.security { background: rgba(255, 51, 102, 0.1); color: var(--danger); }
+        .category-icon.performance { background: rgba(51, 136, 255, 0.1); color: var(--info); }
+        .category-icon.compliance { background: rgba(139, 92, 246, 0.1); color: var(--purple); }
+        .category-icon.operations { background: rgba(255, 170, 51, 0.1); color: var(--warning); }
+        .category-icon.customer { background: rgba(236, 72, 153, 0.1); color: var(--pink); }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .category-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .category-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        /* Recent Reports */
+        .recent-reports {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .reports-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .report-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .report-item:hover {
+            transform: translateX(4px);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .report-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .report-icon.pdf { background: rgba(255, 51, 102, 0.1); color: var(--danger); }
+        .report-icon.excel { background: rgba(0, 255, 136, 0.1); color: var(--success); }
+        .report-icon.csv { background: rgba(51, 136, 255, 0.1); color: var(--info); }
+        .report-icon.presentation { background: rgba(255, 170, 51, 0.1); color: var(--warning); }
+
+        .report-content {
+            flex: 1;
+        }
+
+        .report-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Quick Generate */
+        .quick-generate {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: var(--purple);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-action-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Scheduled Reports */
+        .scheduled-reports {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .schedule-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .schedule-table tbody tr:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .schedule-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .schedule-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .schedule-status.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .schedule-status.paused {
+            background: rgba(255, 170, 51, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 51, 0.3);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Grid Layout Classes */
+        .full-width { grid-column: span 12; }
+        .two-thirds { grid-column: span 8; }
+        .one-third { grid-column: span 4; }
+        .half { grid-column: span 6; }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #00cc70;
+            border-color: #00cc70;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-purple {
+            background: var(--purple);
+            color: white;
+            border-color: var(--purple);
+        }
+
+        .btn-purple:hover {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1rem 0;
+            }
+            
+            .report-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                display: none;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                AI SENTINEL-X
+            </div>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="agents.html" class="nav-link">Agents</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+                <a href="threats.html" class="nav-link">Threats</a>
+                <a href="reports.html" class="nav-link active">Reports</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">1,247</div>
+                            <div class="stat-badge-label">Reports Generated</div>
+                        </div>
+                    </div>
+                    <div class="stat-badge">
+                        <div>
+                            <div class="stat-badge-value">23</div>
+                            <div class="stat-badge-label">Scheduled Active</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-button" onclick="toggleUserMenu()">
+                        <div class="user-avatar">SA</div>
+                        <div class="user-info">
+                            <div class="user-name">Super Admin</div>
+                            <div class="user-role">System Administrator</div>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.75rem;">▼</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <a href="dashboard.html" class="sidebar-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="agents.html" class="sidebar-item">
+                    <span>🤖</span> Agents
+                    <span class="sidebar-badge">2,847</span>
+                </a>
+                <a href="threats.html" class="sidebar-item">
+                    <span>🛡️</span> Threats
+                    <span class="sidebar-badge danger">47</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Operations</div>
+                <a href="#" class="sidebar-item" onclick="showDeployments()">
+                    <span>🚀</span> Deployments
+                </a>
+                <a href="#" class="sidebar-item" onclick="showMaintenance()">
+                    <span>🔧</span> Maintenance
+                    <span class="sidebar-badge warning">3</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showBackups()">
+                    <span>💾</span> Backups
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Analytics</div>
+                <a href="analytics.html" class="sidebar-item">
+                    <span>⚡</span> Performance
+                </a>
+                <a href="#" class="sidebar-item" onclick="showFinancials()">
+                    <span>💰</span> Financials
+                </a>
+                <a href="reports.html" class="sidebar-item active">
+                    <span>📈</span> Reports
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Support</div>
+                <a href="#" class="sidebar-item" onclick="showTickets()">
+                    <span>🎫</span> Tickets
+                    <span class="sidebar-badge">23</span>
+                </a>
+                <a href="#" class="sidebar-item" onclick="showDocumentation()">
+                    <span>📚</span> Documentation
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <span>📊</span> Reports & Business Intelligence
+                    </h1>
+                    <p class="page-subtitle">
+                        Comprehensive reporting suite for security analytics, business intelligence, and compliance across all deployments
+                    </p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn" onclick="manageSchedules()">
+                        <span>⏰</span> Manage Schedules
+                    </button>
+                    <button class="btn btn-purple" onclick="openReportBuilder()">
+                        <span>🔧</span> Report Builder
+                    </button>
+                    <button class="btn btn-primary" onclick="generateCustomReport()">
+                        <span>📊</span> Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report Categories -->
+            <div class="report-categories">
+                <div class="category-card" onclick="openCategory('financial')">
+                    <div class="category-icon financial">💰</div>
+                    <h3 class="category-title">Financial Reports</h3>
+                    <p class="category-description">
+                        Revenue analytics, customer billing, subscription metrics, and financial forecasting across all customers.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">$487K</div>
+                            <div class="stat-label">MRR</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">847</div>
+                            <div class="stat-label">Customers</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">18%</div>
+                            <div class="stat-label">Growth</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('security')">
+                    <div class="category-icon security">🛡️</div>
+                    <h3 class="category-title">Security Reports</h3>
+                    <p class="category-description">
+                        Threat intelligence, incident analysis, vulnerability assessments, and security posture reporting.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">14.2M</div>
+                            <div class="stat-label">Threats</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">99.7%</div>
+                            <div class="stat-label">Detection</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">23</div>
+                            <div class="stat-label">Critical</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('performance')">
+                    <div class="category-icon performance">⚡</div>
+                    <h3 class="category-title">Performance Reports</h3>
+                    <p class="category-description">
+                        System performance metrics, agent efficiency, uptime analysis, and capacity planning insights.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">99.98%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">0.8ms</div>
+                            <div class="stat-label">Response</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">2,847</div>
+                            <div class="stat-label">Agents</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('compliance')">
+                    <div class="category-icon compliance">✅</div>
+                    <h3 class="category-title">Compliance Reports</h3>
+                    <p class="category-description">
+                        SOC2, ISO27001, GDPR compliance tracking, audit trails, and regulatory reporting automation.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">SOC2</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">847</div>
+                            <div class="stat-label">Audits</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Violations</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('operations')">
+                    <div class="category-icon operations">🔧</div>
+                    <h3 class="category-title">Operations Reports</h3>
+                    <p class="category-description">
+                        Deployment statistics, maintenance schedules, resource utilization, and operational efficiency metrics.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">127</div>
+                            <div class="stat-label">Deployments</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Maintenance</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">94%</div>
+                            <div class="stat-label">Efficiency</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('customer')">
+                    <div class="category-icon customer">👥</div>
+                    <h3 class="category-title">Customer Analytics</h3>
+                    <p class="category-description">
+                        Customer usage patterns, satisfaction metrics, support analytics, and customer success insights.
+                    </p>
+                    <div class="category-stats">
+                        <div class="category-stat">
+                            <div class="stat-number">847</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">4.8</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="category-stat">
+                            <div class="stat-number">97%</div>
+                            <div class="stat-label">Retention</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports -->
+            <div class="recent-reports">
+                <div class="reports-header">
+                    <h2 class="reports-title">
+                        <span>📋</span> Recent Reports
+                    </h2>
+                    <button class="btn btn-sm" onclick="viewAllReports()">View All</button>
+                </div>
+                <div id="recentReportsContainer">
+                    <!-- Recent reports will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Quick Generate Actions -->
+            <div class="quick-generate">
+                <div class="reports-header">
+                    <h2 class="reports-title">
+                        <span>⚡</span> Quick Generate
+                    </h2>
+                </div>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="quickGenerate('executive')">
+                        <div class="quick-action-icon">👔</div>
+                        <div class="quick-action-title">Executive Summary</div>
+                        <div class="quick-action-description">High-level overview for leadership</div>
+                    </div>
+                    <div class="quick-action" onclick="quickGenerate('security')">
+                        <div class="quick-action-icon">🔒</div>
+                        <div class="quick-action-title">Security Brief</div>
+                        <div class="quick-action-description">Latest threat intelligence</div>
+                    </div>
+                    <div class="quick-action" onclick="quickGenerate('financial')">
+                        <div class="quick-action-icon">💵</div>
+                        <div class="quick-action-title">Financial Summary</div>
+                        <div class="quick-action-description">Revenue and billing metrics</div>
+                    </div>
+                    <div class="quick-action" onclick="quickGenerate('performance')">
+                        <div class="quick-action-icon">📈</div>
+                        <div class="quick-action-title">Performance Dashboard</div>
+                        <div class="quick-action-description">System health and metrics</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduled Reports -->
+            <div class="scheduled-reports">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem;">
+                            <span>⏰</span> Scheduled Reports
+                        </h2>
+                        <button class="btn btn-sm btn-primary" onclick="addSchedule()">Add Schedule</button>
+                    </div>
+                </div>
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Report Name</th>
+                            <th>Type</th>
+                            <th>Frequency</th>
+                            <th>Next Run</th>
+                            <th>Recipients</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduledReportsTable">
+                        <!-- Scheduled reports will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <span class="modal-close" onclick="closeModal()">×</span>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const recentReports = [
+            { name: 'Q1 Security Assessment', type: 'PDF', size: '2.4 MB', generated: '2 hours ago', category: 'security' },
+            { name: 'Monthly Financial Report', type: 'Excel', size: '1.8 MB', generated: '1 day ago', category: 'financial' },
+            { name: 'Performance Analytics', type: 'CSV', size: '945 KB', generated: '2 days ago', category: 'performance' },
+            { name: 'Compliance Audit Trail', type: 'PDF', size: '3.2 MB', generated: '3 days ago', category: 'compliance' },
+            { name: 'Executive Presentation', type: 'PowerPoint', size: '5.7 MB', generated: '1 week ago', category: 'executive' }
+        ];
+
+        const scheduledReports = [
+            { name: 'Daily Security Brief', type: 'Security', frequency: 'Daily', nextRun: 'Tomorrow 6:00 AM', recipients: 'security@company.com', status: 'active' },
+            { name: 'Weekly Executive Summary', type: 'Executive', frequency: 'Weekly', nextRun: 'Mon 8:00 AM', recipients: 'executives@company.com', status: 'active' },
+            { name: 'Monthly Financial Report', type: 'Financial', frequency: 'Monthly', nextRun: 'Feb 1, 2025', recipients: 'finance@company.com', status: 'active' },
+            { name: 'Quarterly Compliance Audit', type: 'Compliance', frequency: 'Quarterly', nextRun: 'Mar 31, 2025', recipients: 'compliance@company.com', status: 'paused' },
+            { name: 'Customer Analytics', type: 'Customer', frequency: 'Weekly', nextRun: 'Fri 5:00 PM', recipients: 'success@company.com', status: 'active' }
+        ];
+
+        // Initialize the reports page
+        function initReportsPage() {
+            // Check if user is logged in
+            if (!sessionStorage.getItem('loggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            renderRecentReports();
+            renderScheduledReports();
+        }
+
+        // Render recent reports
+        function renderRecentReports() {
+            const container = document.getElementById('recentReportsContainer');
+            container.innerHTML = recentReports.map(report => {
+                const iconClass = getReportIconClass(report.type);
+                const icon = getReportIcon(report.type);
+                
+                return `
+                    <div class="report-item" onclick="viewReport('${report.name}')">
+                        <div class="report-icon ${iconClass}">${icon}</div>
+                        <div class="report-content">
+                            <div class="report-name">${report.name}</div>
+                            <div class="report-meta">
+                                <span>Type: ${report.type}</span>
+                                <span>Size: ${report.size}</span>
+                                <span>Generated: ${report.generated}</span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-sm" onclick="event.stopPropagation(); downloadReport('${report.name}')">📥 Download</button>
+                            <button class="btn btn-sm" onclick="event.stopPropagation(); shareReport('${report.name}')">🔗 Share</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render scheduled reports
+        function renderScheduledReports() {
+            const tbody = document.getElementById('scheduledReportsTable');
+            tbody.innerHTML = scheduledReports.map(schedule => `
+                <tr onclick="editSchedule('${schedule.name}')">
+                    <td><strong>${schedule.name}</strong></td>
+                    <td>${schedule.type}</td>
+                    <td>${schedule.frequency}</td>
+                    <td>${schedule.nextRun}</td>
+                    <td>${schedule.recipients}</td>
+                    <td>
+                        <span class="schedule-status ${schedule.status}">
+                            <span class="status-dot"></span>
+                            ${schedule.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); toggleSchedule('${schedule.name}')">
+                            ${schedule.status === 'active' ? 'Pause' : 'Resume'}
+                        </button>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); runNow('${schedule.name}')">Run Now</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Helper functions
+        function getReportIconClass(type) {
+            const classes = {
+                'PDF': 'pdf',
+                'Excel': 'excel',
+                'CSV': 'csv',
+                'PowerPoint': 'presentation'
+            };
+            return classes[type] || 'pdf';
+        }
+
+        function getReportIcon(type) {
+            const icons = {
+                'PDF': '📄',
+                'Excel': '📊',
+                'CSV': '📋',
+                'PowerPoint': '📊'
+            };
+            return icons[type] || '📄';
+        }
+
+        // Category actions
+        function openCategory(category) {
+            const categoryData = {
+                financial: {
+                    title: '💰 Financial Reports',
+                    description: 'Generate comprehensive financial analytics and business intelligence reports.',
+                    reports: [
+                        'Monthly Revenue Report',
+                        'Customer Billing Summary',
+                        'Subscription Analytics',
+                        'Financial Forecasting',
+                        'Cost Analysis Report'
+                    ]
+                },
+                security: {
+                    title: '🛡️ Security Reports',
+                    description: 'Create detailed security analytics and threat intelligence reports.',
+                    reports: [
+                        'Threat Intelligence Report',
+                        'Incident Analysis',
+                        'Vulnerability Assessment',
+                        'Security Posture Report',
+                        'Compliance Security Audit'
+                    ]
+                },
+                performance: {
+                    title: '⚡ Performance Reports',
+                    description: 'Analyze system performance and operational efficiency metrics.',
+                    reports: [
+                        'System Performance Dashboard',
+                        'Agent Efficiency Report',
+                        'Uptime Analysis',
+                        'Capacity Planning Report',
+                        'Resource Utilization'
+                    ]
+                },
+                compliance: {
+                    title: '✅ Compliance Reports',
+                    description: 'Generate regulatory compliance and audit trail documentation.',
+                    reports: [
+                        'SOC2 Compliance Report',
+                        'ISO27001 Audit Trail',
+                        'GDPR Compliance Summary',
+                        'Regulatory Reporting',
+                        'Data Privacy Assessment'
+                    ]
+                },
+                operations: {
+                    title: '🔧 Operations Reports',
+                    description: 'Track operational metrics and deployment statistics.',
+                    reports: [
+                        'Deployment Statistics',
+                        'Maintenance Schedule',
+                        'Operational Efficiency',
+                        'Resource Management',
+                        'Infrastructure Report'
+                    ]
+                },
+                customer: {
+                    title: '👥 Customer Analytics',
+                    description: 'Analyze customer behavior and satisfaction metrics.',
+                    reports: [
+                        'Customer Usage Patterns',
+                        'Satisfaction Metrics',
+                        'Support Analytics',
+                        'Customer Success Report',
+                        'Retention Analysis'
+                    ]
+                }
+            };
+
+            const data = categoryData[category];
+            
+            showModal(data.title, `
+                <div style="margin-bottom: 2rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">${data.description}</p>
+                </div>
+                
+                <h3 style="margin-bottom: 1rem;">Available Reports:</h3>
+                <div style="display: grid; gap: 0.75rem; margin-bottom: 2rem;">
+                    ${data.reports.map(report => `
+                        <div style="padding: 1rem; background: var(--secondary-bg); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" 
+                             onclick="generateSpecificReport('${report}')"
+                             onmouseover="this.style.background='rgba(139, 92, 246, 0.05)'"
+                             onmouseout="this.style.background='var(--secondary-bg)'">
+                            <strong>${report}</strong>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="generateCategoryReport('${category}')">Generate Custom Report</button>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        // Report generation functions
+        function generateCustomReport() {
+            showModal('📊 Generate Custom Report', `
+                <form onsubmit="event.preventDefault(); createCustomReport();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Report Name</label>
+                            <input type="text" class="form-input" placeholder="Enter report name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Report Type</label>
+                            <select class="form-select" required>
+                                <option value="">Select type...</option>
+                                <option value="financial">Financial</option>
+                                <option value="security">Security</option>
+                                <option value="performance">Performance</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="operations">Operations</option>
+                                <option value="customer">Customer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Date Range</label>
+                            <select class="form-select" required>
+                                <option value="last24h">Last 24 Hours</option>
+                                <option value="last7d">Last 7 Days</option>
+                                <option value="last30d" selected>Last 30 Days</option>
+                                <option value="last90d">Last 90 Days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Output Format</label>
+                            <select class="form-select" required>
+                                <option value="pdf">PDF Document</option>
+                                <option value="excel">Excel Spreadsheet</option>
+                                <option value="csv">CSV Data</option>
+                                <option value="presentation">PowerPoint Presentation</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">Include Data Sources</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="agents" checked>
+                                    <label for="agents">Agent Performance</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="threats" checked>
+                                    <label for="threats">Threat Intelligence</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="customers">
+                                    <label for="customers">Customer Data</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="financial">
+                                    <label for="financial">Financial Metrics</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="compliance" checked>
+                                    <label for="compliance">Compliance Data</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="analytics">
+                                    <label for="analytics">Analytics Data</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea class="form-textarea" placeholder="Add any specific requirements or notes for this report..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function createCustomReport() {
+            closeModal();
+            
+            // Show progress modal
+            showModal('📊 Generating Report', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">⚙️</div>
+                    <h3 style="margin-bottom: 1rem;">Generating your custom report...</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">
+                        Collecting data from <span id="currentStep">2,847 agents</span>...
+                    </p>
+                </div>
+            `);
+            
+            // Simulate progress
+            let progress = 0;
+            const steps = [
+                'Collecting agent performance data...',
+                'Analyzing threat intelligence...',
+                'Processing compliance metrics...',
+                'Generating visualizations...',
+                'Compiling final report...'
+            ];
+            
+            const interval = setInterval(() => {
+                progress += 20;
+                document.getElementById('progressFill').style.width = progress + '%';
+                
+                if (progress < 100) {
+                    document.getElementById('currentStep').textContent = steps[Math.floor(progress / 20)];
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        closeModal();
+                        showNotification('📊 Custom report generated successfully!', 'success');
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function quickGenerate(type) {
+            const types = {
+                executive: 'Executive Summary Report',
+                security: 'Security Intelligence Brief',
+                financial: 'Financial Summary Report',
+                performance: 'Performance Dashboard Report'
+            };
+            
+            showNotification(`🚀 Generating ${types[type]}...`, 'info');
+            
+            setTimeout(() => {
+                showNotification(`✅ ${types[type]} generated successfully!`, 'success');
+            }, 2000);
+        }
+
+        function generateSpecificReport(reportName) {
+            closeModal();
+            showNotification(`📊 Generating ${reportName}...`, 'info');
+            
+            setTimeout(() => {
+                showNotification(`✅ ${reportName} generated successfully!`, 'success');
+            }, 2000);
+        }
+
+        function generateCategoryReport(category) {
+            closeModal();
+            showNotification(`📊 Opening custom report builder for ${category} reports...`, 'info');
+            setTimeout(() => generateCustomReport(), 500);
+        }
+
+        // Report actions
+        function viewReport(reportName) {
+            showModal(`📄 ${reportName}`, `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
+                    <h3 style="margin-bottom: 1rem;">Report Preview</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        ${reportName} would be displayed here with interactive charts, tables, and analytics.
+                    </p>
+                    <div style="background: var(--secondary-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📈 Sample Data Visualization</div>
+                        <div style="color: var(--text-secondary);">Interactive charts and detailed metrics would appear here</div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="btn btn-primary" onclick="downloadReport('${reportName}')">📥 Download</button>
+                        <button class="btn" onclick="shareReport('${reportName}')">🔗 Share</button>
+                        <button class="btn" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function downloadReport(reportName) {
+            showNotification(`📥 Downloading ${reportName}...`, 'success');
+        }
+
+        function shareReport(reportName) {
+            showModal(`🔗 Share ${reportName}`, `
+                <div style="display: grid; gap: 1.5rem;">
+                    <div>
+                        <label class="form-label">Share via Email</label>
+                        <input type="email" class="form-input" placeholder="Enter email addresses (comma separated)" style="margin-bottom: 0.5rem;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Recipients will receive a secure download link</div>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">Access Level</label>
+                        <select class="form-select">
+                            <option>View Only</option>
+                            <option>Download Allowed</option>
+                            <option>Full Access</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">Expiration</label>
+                        <select class="form-select">
+                            <option>24 Hours</option>
+                            <option>7 Days</option>
+                            <option>30 Days</option>
+                            <option>No Expiration</option>
+                        </select>
+                    </div>
+                    
+                    <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px;">
+                        <strong>Shareable Link:</strong>
+                        <div style="margin-top: 0.5rem; padding: 0.5rem; background: var(--border-color); border-radius: 4px; font-family: monospace; font-size: 0.8rem;">
+                            https://reports.aisentinel-x.com/share/abc123...
+                        </div>
+                        <button class="btn btn-sm" style="margin-top: 0.5rem;" onclick="copyShareLink()">📋 Copy Link</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="sendShareInvite()">Send Invite</button>
+                        <button class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function copyShareLink() {
+            showNotification('🔗 Share link copied to clipboard!', 'success');
+        }
+
+        function sendShareInvite() {
+            closeModal();
+            showNotification('📧 Share invitations sent successfully!', 'success');
+        }
+
+        // Schedule management
+        function addSchedule() {
+            showModal('⏰ Add Scheduled Report', `
+                <form onsubmit="event.preventDefault(); createSchedule();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Report Name</label>
+                            <input type="text" class="form-input" placeholder="Enter schedule name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Report Type</label>
+                            <select class="form-select" required>
+                                <option value="">Select type...</option>
+                                <option value="financial">Financial</option>
+                                <option value="security">Security</option>
+                                <option value="performance">Performance</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="executive">Executive</option>
+                                <option value="customer">Customer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Frequency</label>
+                            <select class="form-select" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" class="form-input" value="06:00" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">Recipients</label>
+                            <input type="email" class="form-input" placeholder="Enter email addresses (comma separated)" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">Report Configuration</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="includeCharts" checked>
+                                    <label for="includeCharts">Include Charts</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="includeRaw" checked>
+                                    <label for="includeRaw">Include Raw Data</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="autoArchive">
+                                    <label for="autoArchive">Auto Archive</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="sendAlerts" checked>
+                                    <label for="sendAlerts">Send Alerts</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Create Schedule</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function createSchedule() {
+            closeModal();
+            showNotification('⏰ Report schedule created successfully!', 'success');
+            // Would refresh the scheduled reports table
+            setTimeout(() => {
+                renderScheduledReports();
+            }, 1000);
+        }
+
+        function editSchedule(scheduleName) {
+            const schedule = scheduledReports.find(s => s.name === scheduleName);
+            if (!schedule) return;
+
+            showModal(`✏️ Edit Schedule: ${scheduleName}`, `
+                <form onsubmit="event.preventDefault(); updateSchedule('${scheduleName}');">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Report Name</label>
+                            <input type="text" class="form-input" value="${schedule.name}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Frequency</label>
+                            <select class="form-select" required>
+                                <option value="daily" ${schedule.frequency === 'Daily' ? 'selected' : ''}>Daily</option>
+                                <option value="weekly" ${schedule.frequency === 'Weekly' ? 'selected' : ''}>Weekly</option>
+                                <option value="monthly" ${schedule.frequency === 'Monthly' ? 'selected' : ''}>Monthly</option>
+                                <option value="quarterly" ${schedule.frequency === 'Quarterly' ? 'selected' : ''}>Quarterly</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label">Recipients</label>
+                            <input type="email" class="form-input" value="${schedule.recipients}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" required>
+                                <option value="active" ${schedule.status === 'active' ? 'selected' : ''}>Active</option>
+                                <option value="paused" ${schedule.status === 'paused' ? 'selected' : ''}>Paused</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Update Schedule</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteSchedule('${scheduleName}')">Delete</button>
+                        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function updateSchedule(scheduleName) {
+            closeModal();
+            showNotification(`✅ Schedule "${scheduleName}" updated successfully!`, 'success');
+        }
+
+        function deleteSchedule(scheduleName) {
+            if (confirm(`Are you sure you want to delete the schedule "${scheduleName}"?`)) {
+                closeModal();
+                showNotification(`🗑️ Schedule "${scheduleName}" deleted successfully!`, 'success');
+            }
+        }
+
+        function toggleSchedule(scheduleName) {
+            const schedule = scheduledReports.find(s => s.name === scheduleName);
+            if (schedule) {
+                const newStatus = schedule.status === 'active' ? 'paused' : 'active';
+                schedule.status = newStatus;
+                showNotification(`${newStatus === 'active' ? '▶️' : '⏸️'} Schedule "${scheduleName}" ${newStatus}!`, 'info');
+                renderScheduledReports();
+            }
+        }
+
+        function runNow(scheduleName) {
+            showNotification(`🚀 Running "${scheduleName}" immediately...`, 'info');
+            setTimeout(() => {
+                showNotification(`✅ "${scheduleName}" completed successfully!`, 'success');
+            }, 3000);
+        }
+
+        // Additional functions
+        function openReportBuilder() {
+            showModal('🔧 Advanced Report Builder', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔧</div>
+                    <h3 style="margin-bottom: 1rem;">Advanced Report Builder</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        The advanced report builder allows you to create custom reports with drag-and-drop widgets, 
+                        custom SQL queries, and advanced visualization options.
+                    </p>
+                    <div style="background: var(--secondary-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎨 Features</div>
+                        <ul style="text-align: left; color: var(--text-secondary);">
+                            <li>Drag-and-drop report designer</li>
+                            <li>Custom data source connections</li>
+                            <li>Advanced chart and graph options</li>
+                            <li>Conditional formatting and styling</li>
+                            <li>Real-time preview and testing</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" onclick="launchReportBuilder()">Launch Builder</button>
+                    <button class="btn" onclick="closeModal()" style="margin-left: 1rem;">Close</button>
+                </div>
+            `);
+        }
+
+        function launchReportBuilder() {
+            closeModal();
+            showNotification('🔧 Launching Advanced Report Builder...', 'info');
+        }
+
+        function manageSchedules() {
+            showModal('⏰ Schedule Management', `
+                <div style="margin-bottom: 2rem;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--success); margin-bottom: 0.25rem;">18</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Active Schedules</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--warning); margin-bottom: 0.25rem;">5</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Paused Schedules</div>
+                        </div>
+                        <div style="background: var(--secondary-bg); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--info); margin-bottom: 0.25rem;">127</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Reports This Month</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <button class="btn" style="justify-content: flex-start; padding: 1rem;" onclick="pauseAllSchedules()">
+                            ⏸️ Pause All Schedules
+                        </button>
+                        <button class="btn" style="justify-content: flex-start; padding: 1rem;" onclick="resumeAllSchedules()">
+                            ▶️ Resume All Schedules
+                        </button>
+                        <button class="btn" style="justify-content: flex-start; padding: 1rem;" onclick="exportSchedules()">
+                            📊 Export Schedule Configuration
+                        </button>
+                        <button class="btn" style="justify-content: flex-start; padding: 1rem;" onclick="bulkEdit()">
+                            ✏️ Bulk Edit Schedules
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="addSchedule()">Add New Schedule</button>
+                    <button class="btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        function pauseAllSchedules() {
+            closeModal();
+            showNotification('⏸️ All schedules paused successfully!', 'warning');
+        }
+
+        function resumeAllSchedules() {
+            closeModal();
+            showNotification('▶️ All schedules resumed successfully!', 'success');
+        }
+
+        function exportSchedules() {
+            closeModal();
+            showNotification('📊 Schedule configuration exported!', 'success');
+        }
+
+        function bulkEdit() {
+            closeModal();
+            showNotification('✏️ Opening bulk edit interface...', 'info');
+        }
+
+        function viewAllReports() {
+            showModal('📋 All Reports Archive', `
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" class="form-input" placeholder="Search reports..." style="margin-bottom: 1rem;">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <select class="form-select" style="width: auto;">
+                            <option>All Types</option>
+                            <option>Financial</option>
+                            <option>Security</option>
+                            <option>Performance</option>
+                        </select>
+                        <select class="form-select" style="width: auto;">
+                            <option>All Dates</option>
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${recentReports.concat([
+                        { name: 'Security Incident Report #247', type: 'PDF', size: '1.2 MB', generated: '1 week ago', category: 'security' },
+                        { name: 'Customer Onboarding Analytics', type: 'Excel', size: '3.4 MB', generated: '2 weeks ago', category: 'customer' },
+                        { name: 'Q4 Performance Review', type: 'PowerPoint', size: '8.1 MB', generated: '3 weeks ago', category: 'performance' }
+                    ]).map(report => `
+                        <div class="report-item" onclick="viewReport('${report.name}')">
+                            <div class="report-icon ${getReportIconClass(report.type)}">${getReportIcon(report.type)}</div>
+                            <div class="report-content">
+                                <div class="report-name">${report.name}</div>
+                                <div class="report-meta">
+                                    <span>Type: ${report.type}</span>
+                                    <span>Size: ${report.size}</span>
+                                    <span>Generated: ${report.generated}</span>
+                                </div>
+                            </div>
+                            <div class="report-actions">
+                                <button class="btn btn-sm" onclick="event.stopPropagation(); downloadReport('${report.name}')">📥</button>
+                                <button class="btn btn-sm" onclick="event.stopPropagation(); shareReport('${report.name}')">🔗</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-top: 1rem; text-align: center;">
+                    <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        }
+
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : type === 'warning' ? 'var(--warning)' : 'var(--info)'};
+                color: var(--primary-bg);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+                z-index: 3000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        function toggleUserMenu() {
+            // Would implement user menu toggle
+        }
+
+        // Sidebar navigation functions
+        function showDeployments() { alert('Deployments view coming soon...'); }
+        function showMaintenance() { alert('Maintenance view coming soon...'); }
+        function showBackups() { alert('Backups view coming soon...'); }
+        function showFinancials() { alert('Financials view coming soon...'); }
+        function showTickets() { alert('Tickets view coming soon...'); }
+        function showDocumentation() { alert('Documentation coming soon...'); }
+
+        // Animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize on load
+        window.onload = initReportsPage;
+    </script>
+</body>
+</html>
